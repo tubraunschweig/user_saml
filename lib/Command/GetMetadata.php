@@ -67,7 +67,7 @@ EOT
 	 * @return void
 	 */
 	protected function execute(InputInterface $input, OutputInterface $output) {
-		$idp = $input->getArgument('idp');
+		$idp = (int)$input->getArgument('idp');
 		$settings = new Settings($this->SAMLSettings->getOneLoginSettingsArray($idp));
 		$metadata = $settings->getSPMetadata();
 		$errors = $settings->validateMetadata($metadata);

@@ -206,26 +206,14 @@ class AdminTest extends \Test\TestCase  {
 	}
 
 	public function testGetFormWithoutType() {
+		$this->settings->expects($this->once())
+			->method('getListOfIdps')
+			->willReturn([
+				1 => 'Provider 1',
+				2 => 'Provider 2',
+			]);
 		$this->config
-			->expects($this->at(0))
-			->method('getAppValue')
-			->with('user_saml', 'providerIds')
-			->willReturn('1,2');
-		$this->config
-			->expects($this->at(1))
-			->method('getAppValue')
-			->willReturn('Provider 1');
-		$this->config
-			->expects($this->at(2))
-			->method('getAppValue')
-			->willReturn('Provider 2');
-		$this->config
-			->expects($this->at(3))
-			->method('getAppValue')
-			->with('user_saml', 'sp-name-id-format')
-			->will($this->returnArgument(2));
-		$this->config
-			->expects($this->at(4))
+			->expects($this->once())
 			->method('getAppValue')
 			->with('user_saml', 'type')
 			->willReturn('');
@@ -241,26 +229,14 @@ class AdminTest extends \Test\TestCase  {
 	}
 
 	public function testGetFormWithSaml() {
+		$this->settings->expects($this->once())
+			->method('getListOfIdps')
+			->willReturn([
+				1 => 'Provider 1',
+				2 => 'Provider 2',
+			]);
 		$this->config
-			->expects($this->at(0))
-			->method('getAppValue')
-			->with('user_saml', 'providerIds')
-			->willReturn('1,2');
-		$this->config
-			->expects($this->at(1))
-			->method('getAppValue')
-			->willReturn('Provider 1');
-		$this->config
-			->expects($this->at(2))
-			->method('getAppValue')
-			->willReturn('Provider 2');
-		$this->config
-			->expects($this->at(3))
-			->method('getAppValue')
-			->with('user_saml', 'sp-name-id-format')
-			->will($this->returnArgument(2));
-		$this->config
-			->expects($this->at(4))
+			->expects($this->once())
 			->method('getAppValue')
 			->with('user_saml', 'type')
 			->willReturn('saml');

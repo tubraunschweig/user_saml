@@ -22,11 +22,7 @@
 namespace OCA\User_SAML\Tests\Command;
 
 use OCA\User_SAML\Command\GetMetadata;
-use OCA\User_SAML\Db\ConfigurationsMapper;
 use OCA\User_SAML\SAMLSettings;
-use OCP\IConfig;
-use OCP\ISession;
-use OCP\IURLGenerator;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -35,19 +31,10 @@ class GetMetadataTest extends \Test\TestCase {
 
     /** @var GetMetadata|MockObject*/
     protected $GetMetadata;
-	/** @var ConfigurationsMapper|MockObject */
-	private $mapper;
-    /** @var ISession|MockObject */
-    private $session;
     /** @var SAMLSettings|MockObject*/
     private $samlSettings;
-    /** @var IConfig|MockObject */
-    private $config;
 
     protected function setUp(): void {
-        $this->config = $this->createMock(IConfig::class);
-        $this->session = $this->createMock(ISession::class);
-		$this->mapper = $this->createMock(ConfigurationsMapper::class);
         $this->samlSettings = $this->createMock(SAMLSettings::class);
         $this->GetMetadata = new GetMetadata($this->samlSettings);
 

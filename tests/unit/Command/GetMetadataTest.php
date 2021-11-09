@@ -31,7 +31,6 @@ use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-
 class GetMetadataTest extends \Test\TestCase {
 
     /** @var GetMetadata|MockObject*/
@@ -44,12 +43,8 @@ class GetMetadataTest extends \Test\TestCase {
     private $samlSettings;
     /** @var IConfig|MockObject */
     private $config;
-    /** @var IURLGenerator|MockObject */
-    private $urlGenerator;
-
 
     protected function setUp(): void {
-        $this->urlGenerator = $this->createMock(IURLGenerator::class);
         $this->config = $this->createMock(IConfig::class);
         $this->session = $this->createMock(ISession::class);
 		$this->mapper = $this->createMock(ConfigurationsMapper::class);
@@ -58,38 +53,31 @@ class GetMetadataTest extends \Test\TestCase {
 
         parent::setUp();
     }
-
-    public function testGetMetadata(){
-          $inputInterface = $this->createMock(InputInterface::class);
-          $outputInterface = $this->createMock(OutputInterface::class);
-
-		$this->urlGenerator
-			->expects($this->at(0))
-			->method('linkToRouteAbsolute')
-			->with('user_saml.SAML.base')
-			->willReturn('https://nextcloud.com/base/');
-		$this->urlGenerator
-			->expects($this->at(1))
-			->method('linkToRouteAbsolute')
-			->with('user_saml.SAML.getMetadata')
-			->willReturn('https://nextcloud.com/metadata/');
-		$this->urlGenerator
-			->expects($this->at(2))
-			->method('linkToRouteAbsolute')
-			->with('user_saml.SAML.assertionConsumerService')
-			->willReturn('https://nextcloud.com/acs/');
+	public function testGetMetadata(){
+		$inputInterface = $this->createMock(InputInterface::class);
+		$outputInterface = $this->createMock(OutputInterface::class);
 
 		$this->samlSettings->expects($this->any())
-			  ->method('getOneLoginSettingsArray')
-			  ->willReturn([
-				  'idp-entityId' => 'dummy',
-				  'idp-singleSignOnService.url' => 'https://example.com/sso',
-				  'idp-x509cert' => 'DUMMY CERTIFICATE',
-			  ]);
+			->method('getOneLoginSettingsArray')
+			->willReturn([
+				'baseurl' => 'https://nextcloud.com/base/',
+				'idp' => [
+					'entityId' => 'dummy',
+					'singleSignOnService' => ['url' => 'https://example.com/sso'],
+					'x509cert' => 'DUMMY CERTIFICATE',
+				],
+				'sp' => [
+					'entityId' => 'https://nextcloud.com/metadata/',
+					'assertionConsumerService' => [
+						'url' => 'https://nextcloud.com/acs/',
+					],
+				]
+			]);
 
-          $outputInterface->expects($this->once())->method('writeln')
-              ->with($this->stringContains('md:EntityDescriptor'));
+		$outputInterface->expects($this->once())->method('writeln')
+			->with($this->stringContains('md:EntityDescriptor'));
 
-          $this->invokePrivate($this->GetMetadata, 'execute', [$inputInterface, $outputInterface]);
-    }
+		$this->invokePrivate($this->GetMetadata, 'execute', [$inputInterface, $outputInterface]);
+	}
+
 }

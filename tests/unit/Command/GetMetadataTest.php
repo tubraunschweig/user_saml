@@ -35,17 +35,17 @@ use OCP\IURLGenerator;
 
 class GetMetadataTest extends \Test\TestCase {
 
-    /** @var GetMetadata|\PHPUnit_Framework_MockObject_MockObject*/
+    /** @var GetMetadata|MockObject*/
     protected $GetMetadata;
 	/** @var ConfigurationsMapper|MockObject */
 	private $mapper;
-    /** @var ISession|\PHPUnit_Framework_MockObject_MockObject */
+    /** @var ISession|MockObject */
     private $session;
-    /** @var SAMLSettings|\PHPUnit_Framework_MockObject_MockObject*/
+    /** @var SAMLSettings|MockObject*/
     private $samlSettings;
-    /** @var IConfig|\PHPUnit_Framework_MockObject_MockObject */
+    /** @var IConfig|MockObject */
     private $config;
-    /** @var IURLGenerator|\PHPUnit_Framework_MockObject_MockObject */
+    /** @var IURLGenerator|MockObject */
     private $urlGenerator;
 
 
@@ -69,6 +69,7 @@ class GetMetadataTest extends \Test\TestCase {
     public function testGetMetadata(){
           $inputInterface = $this->createMock(InputInterface::class);
           $outputInterface = $this->createMock(OutputInterface::class);
+
           $this->urlGenerator
             ->expects($this->at(0))
             ->method('linkToRouteAbsolute')
@@ -84,19 +85,14 @@ class GetMetadataTest extends \Test\TestCase {
             ->method('linkToRouteAbsolute')
             ->with('user_saml.SAML.assertionConsumerService')
             ->willReturn('https://nextcloud.com/acs/');
-          $this->config->expects($this->any())->method('getAppValue')
-             ->willReturnCallback(function($app, $key, $default) {
-                 if ($key == 'idp-entityId') {
-                     return "dummy";
-                 }
-                 if ($key == 'idp-singleSignOnService.url') {
-                     return "https://example.com/sso";
-                 }
-                 if ($key == 'idp-x509cert') {
-                     return "DUMMY CERTIFICATE";
-                 }
-                 return $default;
-             });
+
+		  $this->samlSettings->expects($this->any())
+			  ->method('getOneLoginSettingsArray')
+			  ->willReturn([
+				  'idp-entityId' => 'dummy',
+				  'idp-singleSignOnService.url' => 'https://example.com/sso',
+				  'idp-x509cert' => 'DUMMY CERTIFICATE',
+			  ]);
 
           $outputInterface->expects($this->once())->method('writeln')
               ->with($this->stringContains('md:EntityDescriptor'));

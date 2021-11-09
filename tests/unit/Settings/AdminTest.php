@@ -176,7 +176,7 @@ class AdminTest extends \Test\TestCase  {
 			],
 			Constants::NAMEID_UNSPECIFIED => [
 				'label' => 'Unspecified',
-				'selected' => true,
+				'selected' => false,
 			],
 			Constants::NAMEID_WINDOWS_DOMAIN_QUALIFIED_NAME => [
 				'label' => 'Windows domain qualified name',

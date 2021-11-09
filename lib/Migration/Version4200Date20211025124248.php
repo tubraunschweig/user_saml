@@ -87,7 +87,7 @@ class Version4200Date20211025124248 extends SimpleMigrationStep {
 			$table->addColumn('configuration', Types::TEXT, [
 				'notnull' => true,
 			]);
-			$table->setPrimaryKey(['id']);
+			$table->setPrimaryKey(['id'], 'idx_user_saml_config');
 		}
 
 		return $schema;

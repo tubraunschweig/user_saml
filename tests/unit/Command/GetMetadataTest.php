@@ -28,7 +28,6 @@ use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use OCP\IConfig;
-use OCP\IRequest;
 use OCP\ISession;
 use OCP\IURLGenerator;
 
@@ -54,13 +53,7 @@ class GetMetadataTest extends \Test\TestCase {
         $this->config = $this->createMock(IConfig::class);
         $this->session = $this->createMock(ISession::class);
 		$this->mapper = $this->createMock(ConfigurationsMapper::class);
-
-        $this->samlSettings = new SAMLSettings(
-			$this->urlGenerator,
-			$this->config,
-			$this->session,
-			$this->mapper
-		);
+        $this->samlSettings = $this->createMock(SAMLSettings::class);
         $this->GetMetadata = new GetMetadata($this->samlSettings);
 
         parent::setUp();

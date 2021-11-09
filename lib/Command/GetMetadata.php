@@ -26,6 +26,7 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use OCA\User_SAML\SAMLSettings;
+use OneLogin\Saml2\Error;
 use OneLogin\Saml2\Settings;
 
 class GetMetadata extends Command {

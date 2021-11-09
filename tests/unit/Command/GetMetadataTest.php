@@ -22,7 +22,9 @@
 namespace OCA\User_SAML\Tests\Command;
 
 use OCA\User_SAML\Command\GetMetadata;
+use OCA\User_SAML\Db\ConfigurationsMapper;
 use OCA\User_SAML\SAMLSettings;
+use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use OCP\IConfig;
@@ -35,8 +37,8 @@ class GetMetadataTest extends \Test\TestCase {
 
     /** @var GetMetadata|\PHPUnit_Framework_MockObject_MockObject*/
     protected $GetMetadata;
-    /** @var IRequest|\PHPUnit_Framework_MockObject_MockObject */
-    private $request;
+	/** @var ConfigurationsMapper|MockObject */
+	private $mapper;
     /** @var ISession|\PHPUnit_Framework_MockObject_MockObject */
     private $session;
     /** @var SAMLSettings|\PHPUnit_Framework_MockObject_MockObject*/
@@ -50,13 +52,15 @@ class GetMetadataTest extends \Test\TestCase {
     protected function setUp(): void {
         $this->urlGenerator = $this->createMock(IURLGenerator::class);
         $this->config = $this->createMock(IConfig::class);
-        $this->request = $this->createMock(IRequest::class);
         $this->session = $this->createMock(ISession::class);
+		$this->mapper = $this->createMock(ConfigurationsMapper::class);
 
-        $this->samlSettings = new SAMLSettings($this->urlGenerator,
-                                $this->config,
-                                $this->request,
-                                $this->session);
+        $this->samlSettings = new SAMLSettings(
+			$this->urlGenerator,
+			$this->config,
+			$this->session,
+			$this->mapper
+		);
         $this->GetMetadata = new GetMetadata($this->samlSettings);
 
         parent::setUp();

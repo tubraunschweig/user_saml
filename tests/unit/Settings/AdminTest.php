@@ -21,14 +21,19 @@
 
 namespace OCA\User_SAML\Tests\Settings;
 
+use OCA\User_SAML\SAMLSettings;
+use OCA\User_SAML\Settings\Admin;
 use OCP\AppFramework\Http\TemplateResponse;
 use OCP\Defaults;
 use OCP\IConfig;
 use OCP\IL10N;
 use OneLogin\Saml2\Constants;
+use PHPUnit\Framework\MockObject\MockObject;
 
 class AdminTest extends \Test\TestCase  {
-	/** @var \OCA\User_SAML\Settings\Admin */
+	/** @var SAMLSettings|MockObject */
+	private $settings;
+	/** @var Admin */
 	private $admin;
 	/** @var IL10N|\PHPUnit_Framework_MockObject_MockObject */
 	private $l10n;
@@ -41,11 +46,13 @@ class AdminTest extends \Test\TestCase  {
 		$this->l10n = $this->createMock(IL10N::class);
 		$this->defaults = $this->createMock(Defaults::class);
 		$this->config = $this->createMock(IConfig::class);
+		$this->settings = $this->createMock(SAMLSettings::class);
 
-		$this->admin = new \OCA\User_SAML\Settings\Admin(
+		$this->admin = new Admin(
 			$this->l10n,
 			$this->defaults,
-			$this->config
+			$this->config,
+			$this->settings
 		);
 
 		parent::setUp();

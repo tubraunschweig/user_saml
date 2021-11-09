@@ -35,7 +35,6 @@ use OCP\IConfig;
 use OCP\IURLGenerator;
 use OCP\ISession;
 use Symfony\Component\EventDispatcher\GenericEvent;
-use function base64_decode;
 
 class UserBackend implements IApacheBackend, UserInterface, IUserBackend {
 	/** @var IConfig */
@@ -396,9 +395,11 @@ class UserBackend implements IApacheBackend, UserInterface, IUserBackend {
 	 * {@inheritdoc}
 	 */
 	public function getLogoutUrl() {
-		$prefix = $this->settings->getPrefix();
-		$slo = $this->config->getAppValue('user_saml', $prefix . 'idp-singleLogoutService.url', '');
-		if($slo === '') {
+		$id = $this->settings->getProviderId();
+		$settings = $this->settings->get($id);
+		$slo = $settings['idp-singleLogoutService.url'] ?? '';
+
+		if ($slo === '') {
 			return '';
 		}
 
@@ -545,10 +546,13 @@ class UserBackend implements IApacheBackend, UserInterface, IUserBackend {
 		self::$backends = $backends;
 	}
 
+	/**
+	 * @throws \OCP\DB\Exception
+	 */
 	private function getAttributeKeys($name)
 	{
-		$prefix = $this->settings->getPrefix($name);
-		$keys = explode(' ', $this->config->getAppValue('user_saml', $prefix . $name, ''));
+		$settings = $this->settings->get($this->settings->getProviderId());
+		$keys = explode(' ', $settings[$name] ?? $this->config->getAppValue('user_saml', $name, ''));
 
 		if (count($keys) === 1 && $keys[0] === '') {
 			throw new \InvalidArgumentException('Attribute is not configured');

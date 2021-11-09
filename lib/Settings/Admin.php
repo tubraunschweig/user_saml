@@ -23,6 +23,7 @@
 
 namespace OCA\User_SAML\Settings;
 
+use OCA\User_SAML\SAMLSettings;
 use OCP\AppFramework\Http\TemplateResponse;
 use OCP\Defaults;
 use OCP\IConfig;
@@ -37,34 +38,37 @@ class Admin implements ISettings {
 	private $defaults;
 	/** @var IConfig */
 	private $config;
+	/** @var SAMLSettings */
+	private $samlSettings;
 
 	/**
 	 * @param IL10N $l10n
 	 * @param Defaults $defaults
 	 * @param IConfig $config
 	 */
-	public function __construct(IL10N $l10n,
-								Defaults $defaults,
-								IConfig $config) {
+	public function __construct(
+		IL10N        $l10n,
+		Defaults     $defaults,
+		IConfig      $config,
+		SAMLSettings $samlSettings
+	) {
 		$this->l10n = $l10n;
 		$this->defaults = $defaults;
 		$this->config = $config;
+		$this->samlSettings = $samlSettings;
 	}
 
 	/**
 	 * @return TemplateResponse
 	 */
 	public function getForm() {
-		$providerIds = explode(',', $this->config->getAppValue('user_saml', 'providerIds', '1'));
-		natsort($providerIds);
+		$providerIds = $this->samlSettings->getListOfIdps();
 		$providers = [];
-		foreach ($providerIds as $id) {
-			$prefix = $id === '1' ? '' : $id .'-';
-			$name = $this->config->getAppValue('user_saml', $prefix . 'general-idp0_display_name', '');
+		foreach ($providerIds as $id => $name) {
 			$providers[] = [
 				'id' => $id,
 				'name' => $name === '' ? $this->l10n->t('Provider ') . $id : $name
-				];
+			];
 		}
 		$serviceProviderFields = [
 			'x509cert' => $this->l10n->t('X.509 certificate of the Service Provider'),
@@ -175,7 +179,7 @@ class Admin implements ISettings {
 		];
 
 		$type = $this->config->getAppValue('user_saml', 'type');
-		if($type === 'saml') {
+		if ($type === 'saml') {
 			$generalSettings['use_saml_auth_for_desktop'] = [
 				'text' => $this->l10n->t('Use SAML auth for the %s desktop clients (requires user re-authentication)', [$this->defaults->getName()]),
 				'type' => 'checkbox',

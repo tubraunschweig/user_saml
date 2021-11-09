@@ -8,20 +8,29 @@
 		currentConfig: '1',
 		providerIds: '1',
 
-		_getAppConfig: function (key) {
-			return $.ajax({
-				type: 'GET',
-				url: OC.linkToOCS('apps/provisioning_api/api/v1', 2) + 'config/apps' + '/user_saml/' + key + '?format=json'
-			});
-		},
 		init: function(callback) {
-			this._getAppConfig('providerIds').done(function (data){
-				if (data.ocs.data.data !== '') {
-					OCA.User_SAML.Admin.providerIds = data.ocs.data.data;
-					OCA.User_SAML.Admin.currentConfig = OCA.User_SAML.Admin.providerIds.split(',').sort()[0];
+			var xhr = new XMLHttpRequest();
+			request.setRequestHeader('Content-Type', 'application/json')
+			request.setRequestHeader('requesttoken', OC.requestToken)
+
+			xhr.onload = function () {
+				var response = JSON.parse(xhr.response)
+				if (xhr.status >= 200 && xhr.status < 300) {
+					if (response.providerIds !== "") {
+						OCA.User_SAML.Admin.providerIds += ',' + response.providerIds;
+						OCA.User_SAML.Admin.currentConfig = OCA.User_SAML.Admin.providerIds.split(',').sort()[0];
+					}
+					callback()
+				} else {
+					console.error("Could not fetch new provider ID")
 				}
-				callback();
-			});
+			};
+			xhr.onerror = function () {
+				console.error("Could not fetch new provider ID");
+			}
+
+			xhr.open('GET', OC.generateUrl('/apps/user_saml/settings/providers'));
+			xhr.send();
 		},
 		chooseEnv: function() {
 			if (OC.PasswordConfirmation.requiresPasswordConfirmation()) {
@@ -60,23 +69,49 @@
 
 		/**
 		 * Add a new provider
-		 * @returns {number} id of the provider
 		 */
-		addProvider: function(callback) {
-			var providerIds = OCA.User_SAML.Admin.providerIds.split(',');
-			var nextId = 1;
-			if (providerIds.indexOf('1') >= 0) {
-				nextId = 2;
-				while ($.inArray('' + nextId, providerIds) >= 0) {
-					nextId++;
+		addProvider: function (callback) {
+			var xhr = new XMLHttpRequest();
+			request.setRequestHeader('Content-Type', 'application/json')
+			request.setRequestHeader('requesttoken', OC.requestToken)
+
+			xhr.onload = function () {
+				var response = JSON.parse(xhr.response)
+				if (xhr.status >= 200 && xhr.status < 300) {
+					OCA.User_SAML.Admin.providerIds += ',' + response.id;
+					callback(response.id)
+				} else {
+					console.error("Could not fetch new provider ID")
 				}
+			};
+			xhr.onerror = function () {
+				console.error("Could not fetch new provider ID");
 			}
-			OCP.AppConfig.setValue('user_saml', 'providerIds', OCA.User_SAML.Admin.providerIds + ',' + nextId, {
-				success: function () {
-					OCA.User_SAML.Admin.providerIds += ',' + nextId;
-					callback(nextId)
+
+			xhr.open('PUT', OC.generateUrl('/apps/user_saml/settings/providerSettings'));
+			xhr.send();
+		},
+
+		updateProvider: function (configKey, configValue, successCb, errorCb) {
+			var xhr = new XMLHttpRequest();
+			request.setRequestHeader('Content-Type', 'application/json')
+			request.setRequestHeader('requesttoken', OC.requestToken)
+
+			xhr.onload = function () {
+				if (xhr.status >= 200 && xhr.status < 300) {
+					successCb();
+				} else {
+					console.error("Could not update config");
+					errorCb();
 				}
-			});
+			};
+			xhr.onerror = function () {
+				console.error("Could not update config");
+				errorCb();
+			}
+
+			xhr.open('POST', OC.generateUrl('/apps/user_saml/settings/providerSettings/' + this.currentConfig));
+			xhr.send(JSON.stringify({configKey: configKey, configValue: configValue.trim()}));
 		},
 
 		removeProvider: function(callback) {
@@ -86,17 +121,8 @@
 				if (index > -1) {
 					providerIds.splice(index, 1);
 				}
-				var config = this.currentConfig;
 				$.ajax({ url: OC.generateUrl('/apps/user_saml/settings/providerSettings/' + this.currentConfig), type: 'DELETE'})
-					.done(function(data) {
-						OCP.AppConfig.setValue('user_saml', 'providerIds', providerIds.join(','), {
-							success: function () {
-								OCA.User_SAML.Admin.providerIds = providerIds.join(',');
-								callback(config);
-							}
-						});
-					});
-
+					.done(callback);
 			}
 		},
 
@@ -111,8 +137,14 @@
 				configIdentifier = '';
 			}
 			OC.msg.startSaving('#user-saml-save-indicator');
-			OCP.AppConfig.setValue('user_saml', configIdentifier + category + '-' + setting, value.trim());
-			OC.msg.finishedSaving('#user-saml-save-indicator', {status: 'success', data: {message: t('user_saml', 'Saved')}});
+			this.updateProvider(configIdentifier + category + '-' + setting, value,
+				function() {
+					OC.msg.finishedSaving('#user-saml-save-indicator', {status: 'success', data: {message: t('user_saml', 'Saved')}});
+				},
+				function() {
+					OC.msg.finishedSaving('#user-saml-save-indicator', {status: 'error', data: {message: t('user_saml', 'Could not save')}});
+				}
+			);
 		}
 	}
 })(OCA);

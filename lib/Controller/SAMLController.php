@@ -115,7 +115,7 @@ class SAMLController extends Controller {
 	 * @throws NoUserFoundException
 	 * @throws UserFilterViolationException
 	 */
-	private function autoprovisionIfPossible(): void {
+	private function autoprovisionIfPossible($idp = 1): void {
 		$auth = $this->userData->getAttributes();
 
 		if (!$this->userData->hasUidMappingAttribute()) {
@@ -128,6 +128,32 @@ class SAMLController extends Controller {
 			$this->logger->error('Uid is not a valid uid please check your attribute mapping', ['app' => $this->appName]);
 			throw new \InvalidArgumentException('No valid uid given, please check your attribute mapping.');
 		}
+
+		$uid = $this->userData->getOriginalUid();
+		$uid_regex_filter = $this->samlSettings->get($idp)['general-uid_regex_filter'];
+
+		if($uid_regex_filter){
+			if(@preg_match('/'.$uid_regex_filter.'/',$uid)) {
+				$this->logger->debug('uid_regex_filter ' . $uid);
+				throw new \Exception('You are not allowed to Login ' . $uid);
+			}
+			if(preg_last_error()){
+				$this->logger->error('uid_regex_filter throwing error: '. preg_last_error_msg());
+			}
+		}
+
+		$uid_regex_allow = $this->samlSettings->get($idp)['general-uid_regex_allow'];
+
+		if($uid_regex_allow){
+			if(!@preg_match('/'.$uid_regex_allow.'/',$uid)) {
+				$this->logger->debug('uid_regex_allow ' . $uid);
+				throw new \Exception('You are not allowed to Login ' . $uid);
+			}
+			if(preg_last_error()){
+				$this->logger->error('uid_regex_filter throwing error: '. preg_last_error_msg());
+			}
+		}
+
 		$uid = $this->userData->getEffectiveUid();
 		$userExists = $uid !== '';
 
@@ -156,6 +182,15 @@ class SAMLController extends Controller {
 			$this->userBackend->createUserIfNotExists($uid, $auth);
 			$this->userBackend->updateAttributes($uid, $auth);
 			return;
+		}
+	}
+
+	private function migrateSharesIfPossible($user){
+		$uid = $user->getUID();
+		$mail = (string)$user->getSystemEMailAddress();
+		$shares = $this->userBackend->getShares($mail);
+		foreach($shares as $share){
+			$this->userBackend->updateShare($share['id'], $uid, $mail, $this->userBackend->getFileName($share['file_source']));
 		}
 	}
 
@@ -246,7 +281,7 @@ class SAMLController extends Controller {
 				$this->session->set('user_saml.samlUserData', $_SERVER);
 				try {
 					$this->userData->setAttributes($this->session->get('user_saml.samlUserData'));
-					$this->autoprovisionIfPossible();
+					$this->autoprovisionIfPossible($idp);
 					$user = $this->userResolver->findExistingUser($this->userBackend->getCurrentUserId());
 					$firstLogin = $user->updateLastLoginTimestamp();
 					if ($firstLogin) {
@@ -382,7 +417,12 @@ class SAMLController extends Controller {
 		// explaining the issue.
 		try {
 			$this->userData->setAttributes($auth->getAttributes());
-			$this->autoprovisionIfPossible();
+			$this->autoprovisionIfPossible($idp);
+		} catch (\Exception $e) {
+			$this->logger->error($e->getMessage(), ['app' => $this->appName]);
+			$response = new Http\RedirectResponse($this->urlGenerator->linkToRouteAbsolute('user_saml.SAML.genericError',['message' => $e->getMessage()]));
+			$response->invalidateCookie('saml_data');
+			return $response;
 		} catch (NoUserFoundException $e) {
 			$this->logger->error($e->getMessage(), ['app' => $this->appName]);
 			$response = new Http\RedirectResponse($this->urlGenerator->linkToRouteAbsolute('user_saml.SAML.notProvisioned'));
@@ -415,6 +455,12 @@ class SAMLController extends Controller {
 			$response = new Http\RedirectResponse($this->urlGenerator->linkToRouteAbsolute('user_saml.SAML.notProvisioned'));
 			$response->invalidateCookie('saml_data');
 			return $response;
+		}
+
+		try {
+			$this->migrateSharesIfPossible($user);
+		} catch (\Exception $e) {
+			$this->logger->logException($e, ['app' => $this->appName]);
 		}
 
 		$originalUrl = $data['RelayState'] ?? $data['OriginalUrl'];
@@ -582,7 +628,7 @@ class SAMLController extends Controller {
 		$attributes = ['loginUrls' => []];
 
 		if ($this->samlSettings->allowMultipleUserBackEnds()) {
-			$displayName = $this->l->t('Direct log in');
+			$displayName = $this->l->t('Guest');
 
 			$customDisplayName = $this->config->getAppValue('user_saml', 'directLoginName', '');
 			if ($customDisplayName !== '') {

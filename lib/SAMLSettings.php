@@ -28,6 +28,7 @@ use OCP\IConfig;
 use OCP\ISession;
 use OCP\IURLGenerator;
 use OneLogin\Saml2\Constants;
+use OCP\ICacheFactory;
 
 class SAMLSettings {
 	private const LOADED_NONE = 0;
@@ -41,6 +42,8 @@ class SAMLSettings {
 	public const IDP_CONFIG_KEYS = [
 		'general-idp0_display_name',
 		'general-uid_mapping',
+		'general-uid_regex_allow',
+		'general-uid_regex_filter',
 		'idp-entityId',
 		'idp-singleLogoutService.responseUrl',
 		'idp-singleLogoutService.url',
@@ -91,17 +94,25 @@ class SAMLSettings {
 	private $configurationsLoadedState = self::LOADED_NONE;
 	/** @var ConfigurationsMapper */
 	private $mapper;
+	/** @var LocalUsers */
+	public $LocalUsers;
+	/** @var ICache */
+	public $cache;
 
 	public function __construct(
 		IURLGenerator $urlGenerator,
 		IConfig       $config,
 		ISession      $session,
-		ConfigurationsMapper $mapper
+		ConfigurationsMapper $mapper,
+		LocalUsers $LocalUsers,
+		ICacheFactory $cacheFactory,
 	) {
 		$this->urlGenerator = $urlGenerator;
 		$this->config = $config;
 		$this->session = $session;
 		$this->mapper = $mapper;
+		$this->LocalUsers = $LocalUsers;
+		$this->cache = $cacheFactory->createDistributed('user_saml');
 	}
 
 	/**

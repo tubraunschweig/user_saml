@@ -123,4 +123,11 @@ return [
 			'verb' => 'POST',
 		],
 	],
+	'ocs' => [
+		[
+			'name' => 'UserProvisioning#createUser',
+			'url' => '/createUser',
+			'verb' => 'POST',
+		],
+	],
 ];

@@ -19,6 +19,8 @@ class Version5000Date20211025124248 extends SimpleMigrationStep {
 	private const IDP_CONFIG_KEYS = [
 		'general-idp0_display_name',
 		'general-uid_mapping',
+		'general-uid_regex_allow',
+		'general-uid_regex_filter',
 		'idp-entityId',
 		'idp-singleLogoutService.responseUrl',
 		'idp-singleLogoutService.url',

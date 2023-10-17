@@ -41,9 +41,17 @@ While theoretically any other authentication provider implementing either one of
 		<command>OCA\User_SAML\Command\ConfigGet</command>
 		<command>OCA\User_SAML\Command\ConfigSet</command>
 		<command>OCA\User_SAML\Command\GetMetadata</command>
+		<command>OCA\User_SAML\Command\CreateUser</command>
 	</commands>
 	<settings>
 		<admin>OCA\User_SAML\Settings\Admin</admin>
 		<admin-section>OCA\User_SAML\Settings\Section</admin-section>
 	</settings>
+
+	<collaboration>
+		<plugins>
+			<plugin type="collaborator-search" share-type="SHARE_TYPE_USER">OCA\User_SAML\Collaboration\v2\CollaboratorSearchPlugin</plugin>
+		</plugins>
+	</collaboration>
+
 </info>

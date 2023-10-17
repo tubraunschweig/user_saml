@@ -107,6 +107,14 @@ class Admin implements ISettings {
 				'text' => $this->l10n->t('Only allow authentication if an account exists on some other backend (e.g. LDAP).'),
 				'type' => 'checkbox',
 				'global' => true,
+			],
+			'uid_regex_filter' => [
+				'text' => 'block filter uid (regex)',
+				'type' => 'line',
+			],
+			'uid_regex_allow' => [
+				'text' => 'allow filter uid (regex)',
+				'type' => 'line',
 			]
 		];
 		$attributeMappingSettings = [
@@ -229,6 +237,13 @@ class Admin implements ISettings {
 				'hideForEnv' => true,
 				'global' => true,
 				'value' => $this->config->getAppValue('user_saml', 'general-allow_multiple_user_back_ends')
+			];
+			$generalSettings['localUserFilePath'] = [
+				'text' => 'localUserFilePath (e.g. /var/www/html/localUsers.json)',
+				'type' => 'line',
+				'hideForEnv' => true,
+				'global' => true,
+				'value' => $this->config->getAppValue('user_saml', 'general-localUserFilePath')
 			];
 		}
 

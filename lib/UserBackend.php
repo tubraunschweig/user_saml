@@ -37,6 +37,7 @@ use OCP\User\Backend\IGetDisplayNameBackend;
 use OCP\User\Events\UserChangedEvent;
 use OCP\UserInterface;
 use Symfony\Component\EventDispatcher\GenericEvent;
+use OCP\Share\IShare;
 
 class UserBackend implements IApacheBackend, UserInterface, IUserBackend, IGetDisplayNameBackend {
 	/** @var IConfig */
@@ -281,12 +282,76 @@ class UserBackend implements IApacheBackend, UserInterface, IUserBackend, IGetDi
 	 * @return boolean
 	 * @since 4.5.0
 	 */
-	public function userExists($uid) {
+	public function userExists($uid, $createUser = false)
+	{
 		if ($backend = $this->getActualUserBackend($uid)) {
 			return $backend->userExists($uid);
-		} else {
-			return $this->userExistsInDatabase($uid);
 		}
+
+		if ($createUser) {
+			try {
+				$this->createLocalUser($uid);
+			} catch (\Throwable $e) {
+				$this->logger->error('SAML create user from localUsers - {e}', ['e' => $e]);
+			}
+		}
+
+		return $this->userExistsInDatabase($uid);
+	}
+
+	private function createLocalUser($uid)
+	{
+		if ($uid === null) {
+			return false;
+		}
+		// lock createLocalUser to avoid possible confilcts (testing)
+		$lockKey = 'createLocalUser_' . hash('md5', $uid);
+		if ($this->settings->cache->get($lockKey) !== null) {
+			return false;
+		}
+		$this->settings->cache->set($lockKey, true, 15);
+
+		if (isset($_SERVER['REQUEST_URI']) && $_SERVER['REQUEST_URI']) {
+			$createUser = false;
+			if (str_contains($_SERVER['REQUEST_URI'], '/ocs/v2.php/apps/files_sharing/api/v1/sharees') && in_array($_SERVER['REQUEST_METHOD'], ['POST', 'GET'])) {
+				$createUser = true;
+			}
+			if (!$this->userExistsInDatabase($uid) && $createUser) {
+				$found = $this->settings->LocalUsers->getUser($uid);
+				if ($found === null) {
+					return false;
+				}
+				if ($found['COMMON_MAIL'] !== null && $found['NAME'] !== null) {
+					//an error may have occurred (testing)
+					$trys = 0;
+					while ($this->userManager->get($uid) === null) {
+						$trys++;
+						try {
+							$this->createUserIfNotExists($uid);
+							break;
+						} catch (\Throwable $e) {
+							$this->logger->error($e);
+						}
+						if ($trys >= 3) {
+							break;
+						}
+					}
+					$this->logger->info('SAML create user from localUsers - {uid} + {uri} - {method} - {trys}', ['uid' => $uid, 'uri' => $_SERVER['REQUEST_URI'], 'method' => $_SERVER['REQUEST_METHOD'], 'trys' => $trys]);
+					$user = $this->userManager->get($uid);
+
+					if ($user !== null) {
+						$displayName = $found['NAME'] . ' (' . $uid . ')';
+						$user->setEMailAddress($found['COMMON_MAIL']);
+						$dispatcher = \OC::$server->get(IEventDispatcher::class);
+						$dispatcher->dispatchTyped(new UserChangedEvent($user, 'displayName', $displayName));
+						$this->setDisplayName($uid, $displayName);
+					}
+				}
+			}
+		}
+
+		$this->settings->cache->remove($lockKey);
+		return true;
 	}
 
 	public function setDisplayName($uid, $displayName) {
@@ -325,7 +390,7 @@ class UserBackend implements IApacheBackend, UserInterface, IUserBackend, IGetDi
 					->setMaxResults(1);
 				$result = $qb->execute();
 				$users = $result->fetchAll();
-				if (isset($users[0]['displayname'])) {
+				if (isset($users[0]['displayname']) && $users[0]['displayname']) {
 					return $users[0]['displayname'];
 				}
 			}
@@ -655,6 +720,9 @@ class UserBackend implements IApacheBackend, UserInterface, IUserBackend, IGetDi
 				$user->setEMailAddress($newEmail);
 			}
 			$currentDisplayname = $this->getDisplayName($uid);
+			if ($newDisplayname !== null) {
+				$newDisplayname = $newDisplayname . ' (' . $uid . ')';
+			}
 			if ($newDisplayname !== null
 				&& $currentDisplayname !== $newDisplayname) {
 				$this->eventDispatcher->dispatchTyped(new UserChangedEvent($user, 'displayName', $newDisplayname, $currentDisplayname));
@@ -680,6 +748,12 @@ class UserBackend implements IApacheBackend, UserInterface, IUserBackend, IGetDi
 				}
 
 				foreach ($groupsToRemove as $group) {
+					if(@preg_match('/(^App\$.*$)/',$group)) {
+						continue;
+					}
+					if(preg_last_error()){
+						$this->logger->error('preg_match for groups throwing error: '. preg_last_error_msg());
+					}
 					$groupManager->get($group)->removeUser($user);
 				}
 			}
@@ -696,4 +770,76 @@ class UserBackend implements IApacheBackend, UserInterface, IUserBackend, IGetDi
 
 		return $result->fetchColumn();
 	}
+
+
+	public function getShares($mail) {
+		$qb = $this->db->getQueryBuilder();
+		$qb->select('*')
+			->from('share')
+			->where($qb->expr()->eq('share_with', $qb->createNamedParameter($mail)))
+			->andWhere($qb->expr()->eq('share_type', $qb->createNamedParameter(IShare::TYPE_EMAIL)));
+
+		$cursor = $qb->executeQuery();
+		$shares = [];
+		while ($data = $cursor->fetch()) {
+			$shares[] = $data;
+		}
+		$cursor->closeCursor();
+
+		return $shares;
+	}
+
+	public function getCurrentShares($userId) {
+		$qb = $this->db->getQueryBuilder();
+		$qb->select('*')
+			->from('share')
+			->where($qb->expr()->eq('share_with', $qb->createNamedParameter($userId)))
+			->andWhere($qb->expr()->eq('share_type', $qb->createNamedParameter(IShare::TYPE_USER)));
+
+		$cursor = $qb->executeQuery();
+		$shares = [];
+		while ($data = $cursor->fetch()) {
+			$shares[] = $data;
+		}
+		$cursor->closeCursor();
+
+		return $shares;
+	}
+
+	public function getFileName($fileid) {
+		$qb = $this->db->getQueryBuilder();
+		$qb->select('*')
+			->from('filecache')
+			->where($qb->expr()->eq('fileid', $qb->createNamedParameter($fileid)));
+
+		$cursor = $qb->executeQuery();
+		$files = [];
+		while ($data = $cursor->fetch()) {
+			$files[] = $data;
+		}
+		$cursor->closeCursor();
+
+		if(!empty($files)){
+			return reset($files)['name'];
+		}
+
+		return '';
+	}
+
+	public function updateShare($id, $userId, $mail, $name) {
+		$qb = $this->db->getQueryBuilder();
+		$qb->update('share')
+			->where($qb->expr()->eq('id', $qb->createNamedParameter($id)))
+			->andWhere($qb->expr()->eq('share_with', $qb->createNamedParameter($mail)))
+			->andWhere($qb->expr()->eq('share_type', $qb->createNamedParameter(IShare::TYPE_EMAIL)))
+			->andWhere($qb->expr()->neq('uid_owner', $qb->createNamedParameter($userId)))
+			->set('share_type', $qb->createNamedParameter(IShare::TYPE_USER))
+			->set('share_with', $qb->createNamedParameter($userId))
+			->set('token', $qb->createNamedParameter(NULL))
+			->set('accepted', $qb->createNamedParameter(1))
+			->set('file_target', $qb->createNamedParameter($name))
+			->set('password', $qb->createNamedParameter(NULL))
+			->executeStatement();
+	}
+
 }

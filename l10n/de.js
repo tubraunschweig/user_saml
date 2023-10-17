@@ -1,7 +1,8 @@
 OC.L10N.register(
     "user_saml",
     {
-    "This user account is disabled, please contact your administrator." : "Dieses Nutzerkonto ist deaktiviert. Bitte kontaktiere deinen Administrator.",
+    "Guest" : "Gast",
+    "This user account is disabled, please contact your administrator." : "Dieses Nutzerkonto ist deaktiviert. Bitte kontaktiere Deinen Administrator.",
     "Saved" : "Gespeichert",
     "Could not save" : "Konnte nicht speichern",
     "Provider" : "Anbieter",

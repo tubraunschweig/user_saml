@@ -363,6 +363,18 @@ $(function() {
 		});
 	});
 
+	$('#user-saml-global input[type="text"]').change(function(e) {
+		var el = $(this);
+		$.when(el.focusout()).then(function() {
+			var key = $(this).attr('name');
+			OCA.User_SAML.Admin.setSamlConfigValue('general', key, $(this).val(), true);
+		});
+		if (e.keyCode === 13) {
+			var key = $(this).attr('name');
+			OCA.User_SAML.Admin.setSamlConfigValue('general', key, $(this).val(), true);
+		}
+	});
+
 	$('#user-saml-general input[type="checkbox"]').change(function(e) {
 		var el = $(this);
 		$.when(el.focusout()).then(function() {

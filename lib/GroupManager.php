@@ -85,6 +85,9 @@ class GroupManager {
 		// FIXME: Seems unused
 		$this->config->getAppValue('user_saml', self::LOCAL_GROUPS_CHECK_FOR_MIGRATION, '');
 		foreach ($assignedGroups as $group) {
+			if(@preg_match('/(^App\$.*$)/',$group->getDisplayName())) {
+				continue;
+			}
 			// if group is not supplied by SAML and group has SAML backend
 			if (!in_array($group->getGID(), $samlGroupNames) && $this->hasSamlBackend($group)) {
 				$groupsToRemove[] = $group->getGID();

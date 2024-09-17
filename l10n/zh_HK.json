@@ -3,7 +3,7 @@
     "Saved" : "已儲存",
     "Could not save" : "無法保存",
     "Provider" : "提供者",
-    "Unknown error, please check the log file for more details." : "未知錯誤，請在日誌檔案檢查更多詳情。",
+    "Unknown error, please check the log file for more details." : "錯誤不詳，請在日誌檔案檢查更多詳情。",
     "Direct log in" : "直接登入",
     "SSO & SAML log in" : "SSO & SAML 登入",
     "This page should not be visited directly." : "不應直接訪問此頁面。",
@@ -29,9 +29,10 @@
     "Attribute to map the displayname to." : "映射到顯示名稱的屬性。",
     "Attribute to map the email address to." : "將電子郵件地址映射到的屬性。",
     "Attribute to map the quota to." : "要將配額映射到的屬性。",
-    "Attribute to map the users groups to." : "要映射到用戶分組的屬性。",
     "Attribute to map the users home to." : "要映射到用戶家目錄的屬性。",
+    "Attribute to map the users groups to." : "要映射到用戶分組的屬性。",
     "Attribute to map the users MFA login status" : "映射用戶 MFA 登錄狀態的屬性",
+    "Group Mapping Prefix, default: %s" : "群組對應前綴，預設值：%s",
     "Reject members of these groups. This setting has precedence over required memberships." : "拒絕這些組的成員。 此設置優先於所需的成員資格。",
     "Group A, Group B, …" : "群組 A, 群組 B, …",
     "Require membership in these groups, if any." : "要求成為這些群組的成員（如有）。",
@@ -44,7 +45,6 @@
     "Unspecified" : "未明確的",
     "Windows domain qualified name" : "Windows域限定名稱",
     "X509 subject name" : "X509主體名稱",
-    "Use SAML auth for the %s desktop clients (requires user re-authentication)" : "為 %s 桌面客戶端使用 SAML 認證（需要重新驗證用戶）",
     "Optional display name of the identity provider (default: \"SSO & SAML log in\")" : "可選的身分提供者的顯示名稱（默認：\"SSO及SAML登入\"）",
     "Allow the use of multiple user back-ends (e.g. LDAP)" : "允許使用多個用戶後端（例如 LDAP）",
     "SSO & SAML authentication" : "SSO & SAML 認證",
@@ -65,7 +65,6 @@
     "Show Service Provider settings…" : "顯示伺服器供應商設置...",
     "Name ID format" : "名稱ID格式",
     "Identity Provider Data" : "身分提供者（IdP）資料",
-    "Configure your IdP settings here." : "在這裡配置您的 ldP 設置。",
     "Identifier of the IdP entity (must be a URI)" : "IdP 實體的標識符（必須是URI）",
     "URL Target of the IdP where the SP will send the Authentication Request Message" : "URL 的目標，其中 SP 將發送驗證請求消息",
     "Show optional Identity Provider settings…" : "顯示可選的身分提供者設置...",
@@ -93,6 +92,7 @@
     "Account not provisioned." : "帳號尚未配置",
     "Your account is not provisioned, access to this service is thus not possible." : "您的賬號未配置，因此無法訪問此服務。",
     "Login options:" : "登入選項：",
-    "Choose a authentication provider" : "選擇驗證提供者"
+    "Choose an authentication provider" : "選擇驗證提供者",
+    "Group Mapping Prefix, default: SAML_" : "群組對應前綴，預設值：SAML_"
 },"pluralForm" :"nplurals=1; plural=0;"
 }

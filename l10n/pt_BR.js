@@ -31,9 +31,10 @@ OC.L10N.register(
     "Attribute to map the displayname to." : "Atributo ao qual mapear o nome de exibição.",
     "Attribute to map the email address to." : "Atributo ao qual mapear o endereço de e-mail.",
     "Attribute to map the quota to." : "Atributo ao qual mapear a cota.",
-    "Attribute to map the users groups to." : "Atributo ao qual mapear os grupos de usuários.",
     "Attribute to map the users home to." : "Atributo ao qual mapear a localidade do usuários.",
+    "Attribute to map the users groups to." : "Atributo ao qual mapear os grupos de usuários.",
     "Attribute to map the users MFA login status" : "Atributo para mapear o status de login do MFA dos usuários",
+    "Group Mapping Prefix, default: %s" : "Prefixo de mapeamento de grupo, padrão: %s",
     "Reject members of these groups. This setting has precedence over required memberships." : "Rejeitar membros desses grupos. Essa configuração tem precedência sobre as associações obrigatórias.",
     "Group A, Group B, …" : "Grupo A, Grupo B,…",
     "Require membership in these groups, if any." : "Exigir associação a esses grupos, se houver.",
@@ -46,7 +47,6 @@ OC.L10N.register(
     "Unspecified" : "Não especificado",
     "Windows domain qualified name" : "Nome qualificado do domínio do Windows",
     "X509 subject name" : "Nome do tópico X509",
-    "Use SAML auth for the %s desktop clients (requires user re-authentication)" : "Usar autenticação SAML para os clientes desktop %s (a reautenticação do usuário é requerida)",
     "Optional display name of the identity provider (default: \"SSO & SAML log in\")" : "Nome opcional do provedor de identidade (padrão: \"Login SSO & SAML\")",
     "Allow the use of multiple user back-ends (e.g. LDAP)" : "Permitir o uso de vários backends de usuário (por ex. LDAP)",
     "SSO & SAML authentication" : "Autenticação SSO & SAML",
@@ -67,7 +67,6 @@ OC.L10N.register(
     "Show Service Provider settings…" : "Exibir as configurações do Provedor de Serviços...",
     "Name ID format" : "Formato do ID do nome",
     "Identity Provider Data" : "Dados do Provedor de Identidade",
-    "Configure your IdP settings here." : "Defina suas configurações IdP aqui.",
     "Identifier of the IdP entity (must be a URI)" : "Identificador da entidade IdP (deve ser uma URI)",
     "URL Target of the IdP where the SP will send the Authentication Request Message" : "URL do IdP para onde o SP enviará a mensagem de solicitação de autenticação",
     "Show optional Identity Provider settings…" : "Exibir configurações opcionais do Provedor de Identidade...",
@@ -95,6 +94,7 @@ OC.L10N.register(
     "Account not provisioned." : "Conta não provisionada",
     "Your account is not provisioned, access to this service is thus not possible." : "Seu conta não é provisionada. O acesso a esse serviço não é possível",
     "Login options:" : "Opções de login:",
-    "Choose a authentication provider" : "Escolha um provedor de autenticação"
+    "Choose an authentication provider" : "Escolha um provedor de autenticação",
+    "Group Mapping Prefix, default: SAML_" : "Prefixo de mapeamento de grupo, padrão: SAML_"
 },
 "nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;");

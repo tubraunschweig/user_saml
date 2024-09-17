@@ -27,8 +27,8 @@
     "Attribute to map the displayname to." : "Atribut na koji se mapira ime za prikaz.",
     "Attribute to map the email address to." : "Atribut na koji se mapira adresa e-pošte.",
     "Attribute to map the quota to." : "Atribut na koji se mapira kvota.",
-    "Attribute to map the users groups to." : "Atribut na koji se mapiraju grupe korisnika.",
     "Attribute to map the users home to." : "Atribut na koji se mapira početna mapa korisnika.",
+    "Attribute to map the users groups to." : "Atribut na koji se mapiraju grupe korisnika.",
     "Email address" : "Adresa e-pošte",
     "Encrypted" : "Šifrirano",
     "Entity" : "Entitet",
@@ -38,7 +38,6 @@
     "Unspecified" : "Neodređen",
     "Windows domain qualified name" : "Naziv za Windows domenu",
     "X509 subject name" : "Naziv subjekta X509",
-    "Use SAML auth for the %s desktop clients (requires user re-authentication)" : "Upotrijebite SAML auth za %s računalne klijente (zahtijeva ponovnu autentifikaciju korisnika)",
     "Optional display name of the identity provider (default: \"SSO & SAML log in\")" : "Neobavezno ime za prikaz davatelja identiteta (zadano: „prijava SSO i SAML”)",
     "Allow the use of multiple user back-ends (e.g. LDAP)" : "Dopusti korištenje višestrukih pozadinskih sustava (npr. LDAP-a)",
     "SSO & SAML authentication" : "SSO i SAML autentifikacija",
@@ -57,7 +56,6 @@
     "Show Service Provider settings…" : "Prikaži postavke davatelja usluga…",
     "Name ID format" : "Format ID-ja imena",
     "Identity Provider Data" : "Podaci davatelja identiteta",
-    "Configure your IdP settings here." : "Ovdje konfigurirajte svoje IdP postavke.",
     "Identifier of the IdP entity (must be a URI)" : "Identifikator IdP identiteta (mora biti URI)",
     "URL Target of the IdP where the SP will send the Authentication Request Message" : "Ciljni URL IdP-a za koji će DU poslati poruku zahtjeva za autentifikacijom",
     "Show optional Identity Provider settings…" : "Prikaži neobvezne postavke davatelja identiteta...",
@@ -79,7 +77,6 @@
     "Error" : "Pogreška",
     "Account not provisioned." : "Račun nije uspostavljen.",
     "Your account is not provisioned, access to this service is thus not possible." : "Vaš račun nije uspostavljen, pristup ovoj usluzi nije moguć.",
-    "Login options:" : "Mogućnosti prijave:",
-    "Choose a authentication provider" : "Odaberi davatelja usluge autentifikacije"
+    "Login options:" : "Mogućnosti prijave:"
 },"pluralForm" :"nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;"
 }

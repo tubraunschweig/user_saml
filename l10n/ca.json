@@ -29,8 +29,8 @@
     "Attribute to map the displayname to." : "Atribut per assignar el nom de la pantalla a.",
     "Attribute to map the email address to." : "Atribut per assignar l'adreça de correu electrònic a.",
     "Attribute to map the quota to." : "Atribut per mapejar la quota.",
-    "Attribute to map the users groups to." : "Atribut per mapejar els grups d'usuaris.",
     "Attribute to map the users home to." : "Atribut per ubicar al mapa la casa dels usuaris.",
+    "Attribute to map the users groups to." : "Atribut per mapejar els grups d'usuaris.",
     "Attribute to map the users MFA login status" : "Atribut per assignar l'estat d'inici de sessió MFA dels usuaris",
     "Reject members of these groups. This setting has precedence over required memberships." : "Rebutja els membres d'aquests grups. Aquesta configuració té prioritat sobre els membres obligatoris.",
     "Group A, Group B, …" : "Grup A, Grup B, …",
@@ -44,7 +44,6 @@
     "Unspecified" : "No especificat",
     "Windows domain qualified name" : "Nom qualificat del domini de Windows (FQDN)",
     "X509 subject name" : "Nom X509 del subjecte",
-    "Use SAML auth for the %s desktop clients (requires user re-authentication)" : "Utilitzeu l'autenticació SAML per als clients %s (requereix una autenticació de l'usuari)",
     "Optional display name of the identity provider (default: \"SSO & SAML log in\")" : "Nom de visualització opcional del proveïdor d'identitat (per defecte: “Entrada SSO i SAML\")",
     "Allow the use of multiple user back-ends (e.g. LDAP)" : "Permetre l'ús de múltiples bases d'usuaris (p. ex. LDAP)",
     "SSO & SAML authentication" : "Autenticació SSO & SAML",
@@ -65,7 +64,6 @@
     "Show Service Provider settings…" : "Dades del proveïdor de serveis…",
     "Name ID format" : "Format del nom ID",
     "Identity Provider Data" : "Dades del proveïdor de serveis",
-    "Configure your IdP settings here." : "Configureu aquí la configuració d'IdP.",
     "Identifier of the IdP entity (must be a URI)" : "Identificador de l'entitat IdP (ha de ser un URI)",
     "URL Target of the IdP where the SP will send the Authentication Request Message" : "Orientació URL de l'IdP on SP enviarà el missatge de sol·licitud d'autenticació",
     "Show optional Identity Provider settings…" : "Dades del proveïdor de serveis…",
@@ -92,7 +90,6 @@
     "Your account is denied, access to this service is thus not possible." : "El vostre compte està denegat, per tant l'accés a aquest servei no és possible.",
     "Account not provisioned." : "Compte no subministrat.",
     "Your account is not provisioned, access to this service is thus not possible." : "El vostre compte no està proveït, per tant, l'accés a aquest servei no és possible.",
-    "Login options:" : "Opcions d'inici de sessió:",
-    "Choose a authentication provider" : "Tria un proveïdor d'autenticació"
+    "Login options:" : "Opcions d'inici de sessió:"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

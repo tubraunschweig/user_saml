@@ -1,22 +1,7 @@
 <?php
 /**
- * @copyright Copyright (c) 2016 Lukas Reschke <lukas@statuscode.ch>
- *
- * @license GNU AGPL version 3 or any later version
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *
+ * SPDX-FileCopyrightText: 2016 Nextcloud GmbH and Nextcloud contributors
+ * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
 namespace OCA\User_SAML\Tests\Settings;
@@ -62,9 +47,9 @@ class AdminTest extends \Test\TestCase {
 		$this->l10n
 			->expects($this->any())
 			->method('t')
-			->will($this->returnCallback(function ($text, $parameters = []) {
+			->willReturnCallback(function ($text, $parameters = []) {
 				return vsprintf($text, $parameters);
-			}));
+			});
 
 		$serviceProviderFields = [
 			'x509cert' => 'X.509 certificate of the Service Provider',
@@ -109,11 +94,6 @@ class AdminTest extends \Test\TestCase {
 				'type' => 'checkbox',
 				'global' => true,
 			],
-			'use_saml_auth_for_desktop' => [
-				'text' => 'Use SAML auth for the Nextcloud desktop clients (requires user re-authentication)',
-				'type' => 'checkbox',
-				'global' => true,
-			],
 			'allow_multiple_user_back_ends' => [
 				'text' => $this->l10n->t('Allow the use of multiple user back-ends (e.g. LDAP)'),
 				'type' => 'checkbox',
@@ -151,6 +131,11 @@ class AdminTest extends \Test\TestCase {
 				'text' => $this->l10n->t('Attribute to map the users MFA login status'),
 				'type' => 'line',
 				'required' => false,
+			],
+			'group_mapping_prefix' => [
+				'text' => $this->l10n->t('Group Mapping Prefix, default: SAML_'),
+				'type' => 'line',
+				'required' => true,
 			],
 		];
 
@@ -241,7 +226,6 @@ class AdminTest extends \Test\TestCase {
 			->willReturn('');
 
 		$params = $this->formDataProvider();
-		unset($params['general']['use_saml_auth_for_desktop']);
 		unset($params['general']['idp0_display_name']);
 		unset($params['general']['allow_multiple_user_back_ends']);
 		$params['type'] = '';
@@ -258,15 +242,14 @@ class AdminTest extends \Test\TestCase {
 				2 => 'Provider 2',
 			]);
 		$this->config
-			->expects($this->exactly(4)) # mode + three global values
+			->expects($this->exactly(3)) # mode + three global values
 			->method('getAppValue')
 			->withConsecutive(
 				['user_saml', 'type'],
 				['user_saml', 'general-require_provisioned_account'],
-				['user_saml', 'general-use_saml_auth_for_desktop'],
 				['user_saml', 'general-allow_multiple_user_back_ends'],
 			)
-			->willReturnOnConsecutiveCalls('saml', 0, 0, '');
+			->willReturnOnConsecutiveCalls('saml', '0', '0');
 		$this->defaults
 			->expects($this->any())
 			->method('getName')
@@ -274,9 +257,8 @@ class AdminTest extends \Test\TestCase {
 
 		$params = $this->formDataProvider();
 		$params['type'] = 'saml';
-		$params['general']['require_provisioned_account']['value'] = 0;
-		$params['general']['use_saml_auth_for_desktop']['value'] = 0;
-		$params['general']['allow_multiple_user_back_ends']['value'] = '';
+		$params['general']['require_provisioned_account']['value'] = '0';
+		$params['general']['allow_multiple_user_back_ends']['value'] = '0';
 
 		$expected = new TemplateResponse('user_saml', 'admin', $params);
 		$this->assertEquals($expected, $this->admin->getForm());

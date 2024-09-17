@@ -10,7 +10,7 @@
     "Provider " : "Fournisseur",
     "X.509 certificate of the Service Provider" : "Certificat X.509 du fournisseur de service",
     "Private key of the Service Provider" : "Clé privée du fournisseur de service",
-    "Indicates that the nameID of the <samlp:logoutRequest> sent by this SP will be encrypted." : "Indique que le \"nameID\" de <samlp:logoutRequest> envoyé par ce SP sera chiffré.",
+    "Indicates that the nameID of the <samlp:logoutRequest> sent by this SP will be encrypted." : "Indique que le « nameID » de <samlp:logoutRequest> envoyé par ce SP sera chiffré.",
     "Indicates whether the <samlp:AuthnRequest> messages sent by this SP will be signed. [Metadata of the SP will offer this info]" : "Indique que le <samlp:AuthnRequest> de messages envoyé par SP va être signé. [Métadonnée du SP va donner cette info]",
     "Indicates whether the  <samlp:logoutRequest> messages sent by this SP will be signed." : "Indique si le message <samlp:logoutRequest> envoyé par ce SP sera signé.",
     "Indicates whether the  <samlp:logoutResponse> messages sent by this SP will be signed." : "Indique si le message <samlp:logoutResponse> envoyé par ce SP sera signé.",
@@ -29,8 +29,8 @@
     "Attribute to map the displayname to." : "Attribut pour relier le nom d'utilisateur.",
     "Attribute to map the email address to." : "Attribut pour relier l'adresse mail.",
     "Attribute to map the quota to." : "Attribut pour relier le quota.",
-    "Attribute to map the users groups to." : "Attribut pour relier les groupes d'utilisateurs.",
     "Attribute to map the users home to." : "Attribut pour relier le domicile des utilisateurs.",
+    "Attribute to map the users groups to." : "Attribut pour relier les groupes d'utilisateurs.",
     "Attribute to map the users MFA login status" : "Attribut pour relier l'état de connexion AMF",
     "Reject members of these groups. This setting has precedence over required memberships." : "Rejeter les membres de ces groupes. Ce paramètre prévaut sur les appartenances requises.",
     "Group A, Group B, …" : "Groupe A, Groupe B, ...",
@@ -44,7 +44,6 @@
     "Unspecified" : "Non spécifié",
     "Windows domain qualified name" : "Nom de domaine Windows",
     "X509 subject name" : "Nom du sujet X509",
-    "Use SAML auth for the %s desktop clients (requires user re-authentication)" : "Utiliser l'authentification SAML pour le client bureau de %s (requiert une ré-authentification de l'utilisateur)",
     "Optional display name of the identity provider (default: \"SSO & SAML log in\")" : "Nom d'affichage facultatif du fournisseur d'identité (par défaut : \"Connexion SSO & SAML\")",
     "Allow the use of multiple user back-ends (e.g. LDAP)" : "Autoriser l'utilisation de plusieurs systèmes d'authentification (ex: LDAP)",
     "SSO & SAML authentication" : "Authentification SSO & SAML",
@@ -57,7 +56,7 @@
     "Use built-in SAML authentication" : "Utiliser l'authentification SAML intégrée",
     "Use environment variable" : "Utiliser une variable d’environnement",
     "Global settings" : "Paramètres généraux",
-    "Remove identity provider" : "Supprimer le fournisseur d'identité",
+    "Remove identity provider" : "Retirer le fournisseur d'identité",
     "Add identity provider" : "Ajouter le fournisseur d'identité",
     "General" : "Général",
     "Service Provider Data" : "Service du Fournisseur de Données",
@@ -65,7 +64,6 @@
     "Show Service Provider settings…" : "Afficher les options du fournisseur de service...",
     "Name ID format" : "Format de l'ID du nom",
     "Identity Provider Data" : "Fournisseur de données d'identité",
-    "Configure your IdP settings here." : "Configurez vos options IdP ici.",
     "Identifier of the IdP entity (must be a URI)" : "Identifiant de l'entité IdP (doit être une URI)",
     "URL Target of the IdP where the SP will send the Authentication Request Message" : "URL cible du fournisseur d'identités à qui le fournisseur de service enverra la requête d'authentification",
     "Show optional Identity Provider settings…" : "Afficher les paramètres optionnels du fournisseur d'identité...",
@@ -92,7 +90,6 @@
     "Your account is denied, access to this service is thus not possible." : "Votre compte est rejeté, accéder à ce service n'est donc pas possible.",
     "Account not provisioned." : "Compte non approvisionné.",
     "Your account is not provisioned, access to this service is thus not possible." : "Votre compte n'est pas approvisionné, l'accès à ce service n'est donc pas possible.",
-    "Login options:" : "Options de connexion :",
-    "Choose a authentication provider" : "Choisir un fournisseur d'authentification"
+    "Login options:" : "Options de connexion :"
 },"pluralForm" :"nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;"
 }

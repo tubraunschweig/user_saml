@@ -1,22 +1,7 @@
 <?php
 /**
- * @copyright Copyright (c) 2016 Lukas Reschke <lukas@statuscode.ch>
- *
- * @license GNU AGPL version 3 or any later version
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *
+ * SPDX-FileCopyrightText: 2016 Nextcloud GmbH and Nextcloud contributors
+ * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
 namespace OCA\User_SAML;
@@ -25,7 +10,6 @@ use InvalidArgumentException;
 use OCA\User_SAML\Db\ConfigurationsMapper;
 use OCP\DB\Exception;
 use OCP\IConfig;
-use OCP\IRequest;
 use OCP\ISession;
 use OCP\IURLGenerator;
 use OneLogin\Saml2\Constants;
@@ -36,6 +20,10 @@ class SAMLSettings {
 	private const LOADED_CHOSEN = 1;
 	private const LOADED_ALL = 2;
 
+	// list of global settings which are valid for every idp:
+	// 'general-require_provisioned_account', 'general-allow_multiple_user_back_ends'
+
+	// IdP-specific keys
 	public const IDP_CONFIG_KEYS = [
 		'general-idp0_display_name',
 		'general-uid_mapping',
@@ -69,6 +57,7 @@ class SAMLSettings {
 		'saml-attribute-mapping-home_mapping',
 		'saml-attribute-mapping-quota_mapping',
 		'saml-attribute-mapping-mfa_mapping',
+		'saml-attribute-mapping-group_mapping_prefix',
 		'saml-user-filter-reject_groups',
 		'saml-user-filter-require_groups',
 		'sp-x509cert',
@@ -76,14 +65,14 @@ class SAMLSettings {
 		'sp-privateKey',
 	];
 
+	public const DEFAULT_GROUP_PREFIX = 'SAML_';
+
 	/** @var IURLGenerator */
 	private $urlGenerator;
 	/** @var IConfig */
 	private $config;
 	/** @var ISession */
 	private $session;
-	/** @var array list of global settings which are valid for every idp */
-	private $globalSettings = ['general-require_provisioned_account', 'general-allow_multiple_user_back_ends', 'general-use_saml_auth_for_desktop'];
 	/** @var array<int, array<string, string>> */
 	private $configurations = [];
 	/** @var int */
@@ -91,17 +80,6 @@ class SAMLSettings {
 	/** @var ConfigurationsMapper */
 	private $mapper;
 
-	/** @var LocalUsers */
-	public $LocalUsers;
-	/** @var ICache */
-	public $cache;
-
-	/**
-	 * @param IURLGenerator $urlGenerator
-	 * @param IConfig $config
-	 * @param IRequest $request
-	 * @param ISession $session
-	 */
 	public function __construct(
 		IURLGenerator $urlGenerator,
 		IConfig       $config,
@@ -250,8 +228,8 @@ class SAMLSettings {
 	 * @throws Exception
 	 */
 	protected function ensureConfigurationsLoaded(int $idp = -1): void {
-		if (self::LOADED_ALL === $this->configurationsLoadedState
-			|| (self::LOADED_CHOSEN === $this->configurationsLoadedState
+		if ($this->configurationsLoadedState === self::LOADED_ALL
+			|| ($this->configurationsLoadedState === self::LOADED_CHOSEN
 				&& isset($this->configurations[$idp])
 			)
 		) {

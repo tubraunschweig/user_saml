@@ -1,3 +1,7 @@
+/*
+ * SPDX-FileCopyrightText: 2016 Nextcloud GmbH and Nextcloud contributors
+ * SPDX-License-Identifier: AGPL-3.0-or-later
+ */
 #user-saml input[type="text"],textarea {
 	max-width: 600px;
 	width: 100%;
@@ -6,6 +10,11 @@
 #user-saml input[type="checkbox"] {
 	vertical-align:middle;
 	cursor: pointer;
+}
+
+.user-saml-standalone-label {
+	margin-top: 1.5ex;
+	display: inline-block;
 }
 
 #user-saml h3 {

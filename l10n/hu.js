@@ -31,8 +31,8 @@ OC.L10N.register(
     "Attribute to map the displayname to." : "Az attribútum, amelyhez a megjelenítendő név hozzá lesz rendelve.",
     "Attribute to map the email address to." : "Az attribútum, amelyhez az e-mail-cím hozzá lesz rendelve.",
     "Attribute to map the quota to." : "Az attribútum, amelyhez a kvóta hozzá lesz rendelve.",
-    "Attribute to map the users groups to." : "Az attribútum, amelyhez a felhasználói csoportjai hozzá lesznek rendelve.",
     "Attribute to map the users home to." : "Az attribútum, amelyhez a felhasználók saját mappái hozzá lesznek rendelve.",
+    "Attribute to map the users groups to." : "Az attribútum, amelyhez a felhasználói csoportjai hozzá lesznek rendelve.",
     "Attribute to map the users MFA login status" : "A felhasználók több-faktoros bejelentkezési állapotának leképezéséhez használt attribútum",
     "Reject members of these groups. This setting has precedence over required memberships." : "Ezen csoportok tagjainak elutasítása. Ez a beállítás elsőbbséget élvez a kötelező tagságokkal szemben",
     "Group A, Group B, …" : "Csoport A, Csoport B,…",
@@ -46,7 +46,6 @@ OC.L10N.register(
     "Unspecified" : "Nem meghatározott",
     "Windows domain qualified name" : "Windows tartományi név",
     "X509 subject name" : "X509 tárgy neve",
-    "Use SAML auth for the %s desktop clients (requires user re-authentication)" : "SAML hitelesítés használata a(z) %s asztali klienseihez (a felhasználók ismételt hitelesítését igényli)",
     "Optional display name of the identity provider (default: \"SSO & SAML log in\")" : "A személyazonossági szolgáltató nem kötelező megjelenítendő neve (alapértelmezett: „SSO és SAML bejelentkezés”)",
     "Allow the use of multiple user back-ends (e.g. LDAP)" : "Megengedi a több felhasználói háttérszolgáltatás használatát (például LDAP)",
     "SSO & SAML authentication" : "SSO és SAML hitelesítés",
@@ -67,7 +66,6 @@ OC.L10N.register(
     "Show Service Provider settings…" : "Szolgáltató beállításainak megjelenítése…",
     "Name ID format" : "Névazonosító formátuma",
     "Identity Provider Data" : "Személyazonosság-szolgáltató adatai",
-    "Configure your IdP settings here." : "Itt állítsa be az IdP beállításait.",
     "Identifier of the IdP entity (must be a URI)" : "Az IdP bejegyzés azonosítója (URI-nak kell lennie)",
     "URL Target of the IdP where the SP will send the Authentication Request Message" : "Az IdP URL célja, ahová az SP a hitelesítéskérési üzeneteit küldi",
     "Show optional Identity Provider settings…" : "Nem kötelező személyazonosság-szolgáltatói beállításai…",
@@ -94,7 +92,6 @@ OC.L10N.register(
     "Your account is denied, access to this service is thus not possible." : "A fiókja hozzáférése megtagadva, így ehhez a szolgáltatáshoz nem férhet hozzá.",
     "Account not provisioned." : "A fiók nem felügyelt.",
     "Your account is not provisioned, access to this service is thus not possible." : "A fiókja nem felügyelt, így ehhez a szolgáltatáshoz nem férhet hozzá.",
-    "Login options:" : "Bejelentkezési lehetőségek:",
-    "Choose a authentication provider" : "Válasszon hitelesítésszolgáltatót"
+    "Login options:" : "Bejelentkezési lehetőségek:"
 },
 "nplurals=2; plural=(n != 1);");

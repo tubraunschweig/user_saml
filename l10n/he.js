@@ -23,8 +23,8 @@ OC.L10N.register(
     "Attribute to map the displayname to." : "מאפיין למפות אליו את displayname (שם התצוגה).",
     "Attribute to map the email address to." : "מאפיין למפות אליו את email (כתובת הדוא״ל).",
     "Attribute to map the quota to." : "מאפיין למפות אליו את quota (מיכסה).",
-    "Attribute to map the users groups to." : "מאפיין למפות אליו את קבוצות המשתמשים.",
     "Attribute to map the users home to." : "מאפיין למפות אליו את תיקיות הבית של המשתמשים.",
+    "Attribute to map the users groups to." : "מאפיין למפות אליו את קבוצות המשתמשים.",
     "Email address" : "כתובת דוא״ל",
     "Encrypted" : "מוצפן",
     "Entity" : "יישות",
@@ -42,7 +42,6 @@ OC.L10N.register(
     "If your Service Provider should use certificates you can optionally specify them here." : "אם ספק הזהות שלך אמור להשתמש באישורים ניתן לציין אותם כאן.",
     "Show Service Provider settings…" : "הצגת הגדרות ספק שירות…",
     "Identity Provider Data" : "נתוני ספק שירות",
-    "Configure your IdP settings here." : "הגדרת תצורת ספק השירות להלן.",
     "Attribute mapping" : "מיפוי מאפיינים",
     "Security settings" : "הגדרות אבטחה",
     "Show security settings…" : "הצגת הגדרות אבטחה…",
@@ -54,7 +53,6 @@ OC.L10N.register(
     "Metadata valid" : "נתוני העל תקינים",
     "Error" : "שגיאה",
     "Account not provisioned." : "החשבון לא מנוהל.",
-    "Your account is not provisioned, access to this service is thus not possible." : "החשבון שלך לא מנוהל, לכן הגישה לשירות הזה אינה אפשרות.",
-    "Choose a authentication provider" : "נא לבחור ספק אימות"
+    "Your account is not provisioned, access to this service is thus not possible." : "החשבון שלך לא מנוהל, לכן הגישה לשירות הזה אינה אפשרות."
 },
-"nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n == 2 && n % 1 == 0) ? 1: (n % 10 == 0 && n % 1 == 0 && n > 10) ? 2 : 3;");
+"nplurals=3; plural=(n == 1 && n % 1 == 0) ? 0 : (n == 2 && n % 1 == 0) ? 1: 2;");

@@ -1,24 +1,7 @@
 <?php
 /**
- * @copyright Copyright (c) 2016 Lukas Reschke <lukas@statuscode.ch>
- *
- * @author Lukas Reschke <lukas@statuscode.ch>
- *
- * @license GNU AGPL version 3 or any later version
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *
+ * SPDX-FileCopyrightText: 2016 Nextcloud GmbH and Nextcloud contributors
+ * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
 namespace OCA\User_SAML\Settings;
@@ -41,11 +24,6 @@ class Admin implements ISettings {
 	/** @var SAMLSettings */
 	private $samlSettings;
 
-	/**
-	 * @param IL10N $l10n
-	 * @param Defaults $defaults
-	 * @param IConfig $config
-	 */
 	public function __construct(
 		IL10N        $l10n,
 		Defaults     $defaults,
@@ -133,13 +111,13 @@ class Admin implements ISettings {
 				'type' => 'line',
 				'required' => false,
 			],
-			'group_mapping' => [
-				'text' => $this->l10n->t('Attribute to map the users groups to.'),
+			'home_mapping' => [
+				'text' => $this->l10n->t('Attribute to map the users home to.'),
 				'type' => 'line',
 				'required' => true,
 			],
-			'home_mapping' => [
-				'text' => $this->l10n->t('Attribute to map the users home to.'),
+			'group_mapping' => [
+				'text' => $this->l10n->t('Attribute to map the users groups to.'),
 				'type' => 'line',
 				'required' => true,
 			],
@@ -148,7 +126,11 @@ class Admin implements ISettings {
 				'type' => 'line',
 				'required' => false,
 			],
-
+			'group_mapping_prefix' => [
+				'text' => $this->l10n->t('Group Mapping Prefix, default: %s', [SAMLSettings::DEFAULT_GROUP_PREFIX]),
+				'type' => 'line',
+				'required' => true,
+			],
 		];
 
 		$userFilterSettings = [
@@ -218,13 +200,7 @@ class Admin implements ISettings {
 				'text' => $this->l10n->t('Only allow authentication if an account exists on some other backend (e.g. LDAP).', [$this->defaults->getName()]),
 				'type' => 'checkbox',
 				'global' => true,
-				'value' => $this->config->getAppValue('user_saml', 'general-require_provisioned_account', 0)
-			];
-			$generalSettings['use_saml_auth_for_desktop'] = [
-				'text' => $this->l10n->t('Use SAML auth for the %s desktop clients (requires user re-authentication)', [$this->defaults->getName()]),
-				'type' => 'checkbox',
-				'global' => true,
-				'value' => $this->config->getAppValue('user_saml', 'general-use_saml_auth_for_desktop', 0)
+				'value' => $this->config->getAppValue('user_saml', 'general-require_provisioned_account', '0')
 			];
 			$generalSettings['idp0_display_name'] = [
 				'text' => $this->l10n->t('Optional display name of the identity provider (default: "SSO & SAML log in")'),
@@ -236,7 +212,7 @@ class Admin implements ISettings {
 				'type' => 'checkbox',
 				'hideForEnv' => true,
 				'global' => true,
-				'value' => $this->config->getAppValue('user_saml', 'general-allow_multiple_user_back_ends')
+				'value' => $this->config->getAppValue('user_saml', 'general-allow_multiple_user_back_ends', '0')
 			];
 			$generalSettings['localUserFilePath'] = [
 				'text' => 'localUserFilePath (e.g. /var/www/html/localUsers.json)',

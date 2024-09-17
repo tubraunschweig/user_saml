@@ -1,23 +1,7 @@
 <?php
 /**
- * @copyright Copyright (c) 2016 Lukas Reschke <lukas@statuscode.ch>
- * @copyright Copyright (c) 2018 Jean-Baptiste Pin <jibet.pin@gmail.com>
- *
- * @license GNU AGPL version 3 or any later version
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *
+ * SPDX-FileCopyrightText: 2016 Nextcloud GmbH and Nextcloud contributors
+ * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
 namespace OCA\User_SAML\Controller;
@@ -26,6 +10,7 @@ use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
 use OC\Core\Controller\ClientFlowLoginController;
 use OC\Core\Controller\ClientFlowLoginV2Controller;
+use OC\Security\CSRF\CsrfTokenManager;
 use OCA\User_SAML\Exceptions\NoUserFoundException;
 use OCA\User_SAML\Exceptions\UserFilterViolationException;
 use OCA\User_SAML\Helper\TXmlHelper;
@@ -37,17 +22,18 @@ use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
 use OCP\IConfig;
 use OCP\IL10N;
-use OCP\ILogger;
 use OCP\IRequest;
 use OCP\ISession;
 use OCP\IURLGenerator;
 use OCP\IUserSession;
 use OCP\Security\ICrypto;
 use OCP\Security\ITrustedDomainHelper;
+use OCP\Server;
 use OneLogin\Saml2\Auth;
 use OneLogin\Saml2\Error;
 use OneLogin\Saml2\Settings;
 use OneLogin\Saml2\ValidationError;
+use Psr\Log\LoggerInterface;
 
 class SAMLController extends Controller {
 	use TXmlHelper;
@@ -64,7 +50,7 @@ class SAMLController extends Controller {
 	private $config;
 	/** @var IURLGenerator */
 	private $urlGenerator;
-	/** @var ILogger */
+	/** @var LoggerInterface */
 	private $logger;
 	/** @var IL10N */
 	private $l;
@@ -78,32 +64,20 @@ class SAMLController extends Controller {
 	private $crypto;
 	private ITrustedDomainHelper $trustedDomainHelper;
 
-	/**
-	 * @param string $appName
-	 * @param IRequest $request
-	 * @param ISession $session
-	 * @param IUserSession $userSession
-	 * @param SAMLSettings $samlSettings
-	 * @param UserBackend $userBackend
-	 * @param IConfig $config
-	 * @param IURLGenerator $urlGenerator
-	 * @param ILogger $logger
-	 * @param IL10N $l
-	 */
 	public function __construct(
-		$appName,
-		IRequest      $request,
-		ISession      $session,
-		IUserSession  $userSession,
-		SAMLSettings  $samlSettings,
-		UserBackend   $userBackend,
-		IConfig       $config,
+		string $appName,
+		IRequest $request,
+		ISession $session,
+		IUserSession $userSession,
+		SAMLSettings $samlSettings,
+		UserBackend $userBackend,
+		IConfig $config,
 		IURLGenerator $urlGenerator,
-		ILogger       $logger,
-		IL10N         $l,
-		UserResolver  $userResolver,
-		UserData      $userData,
-		ICrypto       $crypto,
+		LoggerInterface $logger,
+		IL10N $l,
+		UserResolver $userResolver,
+		UserData $userData,
+		ICrypto $crypto,
 		ITrustedDomainHelper $trustedDomainHelper
 	) {
 		parent::__construct($appName, $request);
@@ -125,7 +99,7 @@ class SAMLController extends Controller {
 	 * @throws NoUserFoundException
 	 * @throws UserFilterViolationException
 	 */
-	private function autoprovisionIfPossible($idp = 1): void {
+	private function autoprovisionIfPossible(): void {
 		$auth = $this->userData->getAttributes();
 
 		if (!$this->userData->hasUidMappingAttribute()) {
@@ -238,11 +212,9 @@ class SAMLController extends Controller {
 	 * @OnlyUnauthenticatedUsers
 	 * @NoCSRFRequired
 	 *
-	 * @param int $idp id of the idp
-	 * @return Http\RedirectResponse
 	 * @throws \Exception
 	 */
-	public function login(int $idp = 1) {
+	public function login(int $idp = 1): Http\RedirectResponse {
 		$originalUrl = (string)$this->request->getParam('originalUrl', '');
 		if (!$this->trustedDomainHelper->isTrustedUrl($originalUrl)) {
 			$originalUrl = '';
@@ -334,11 +306,9 @@ class SAMLController extends Controller {
 	/**
 	 * @PublicPage
 	 * @NoCSRFRequired
-	 * @param int $idp
-	 * @return Http\DataDownloadResponse
 	 * @throws Error
 	 */
-	public function getMetadata(int $idp = 1) {
+	public function getMetadata(int $idp = 1): Http\DataDownloadResponse {
 		$settings = new Settings($this->samlSettings->getOneLoginSettingsArray($idp));
 		$metadata = $settings->getSPMetadata();
 		$errors = $this->callWithXmlEntityLoader(function () use ($settings, $metadata) {
@@ -379,7 +349,7 @@ class SAMLController extends Controller {
 		// Decrypt and deserialize
 		try {
 			$cookie = $this->crypto->decrypt($cookie);
-		} catch (\Exception $e) {
+		} catch (\Exception) {
 			$this->logger->debug('Could not decrypt SAML cookie', ['app' => 'user_saml']);
 			return new Http\RedirectResponse($this->urlGenerator->getAbsoluteURL('/'));
 		}
@@ -462,10 +432,10 @@ class SAMLController extends Controller {
 			if ($firstLogin) {
 				$this->userBackend->initializeHomeDir($user->getUID());
 			}
-		} catch (NoUserFoundException $e) {
+		} catch (NoUserFoundException) {
 			throw new \InvalidArgumentException('User "' . $this->userBackend->getCurrentUserId() . '" is not valid');
 		} catch (\Exception $e) {
-			$this->logger->logException($e, ['app' => $this->appName]);
+			$this->logger->critical($e->getMessage(), ['exception' => $e, 'app' => $this->appName]);
 			$response = new Http\RedirectResponse($this->urlGenerator->linkToRouteAbsolute('user_saml.SAML.notProvisioned'));
 			$response->invalidateCookie('saml_data');
 			return $response;
@@ -481,7 +451,7 @@ class SAMLController extends Controller {
 		if ($originalUrl !== null && $originalUrl !== '') {
 			$response = new Http\RedirectResponse($originalUrl);
 		} else {
-			$response = new Http\RedirectResponse(\OC::$server->getURLGenerator()->getAbsoluteURL('/'));
+			$response = new Http\RedirectResponse($this->urlGenerator->getAbsoluteURL('/'));
 		}
 		// The Nextcloud desktop client expects a cookie with the key of "_shibsession"
 		// to be there.
@@ -498,11 +468,9 @@ class SAMLController extends Controller {
 	 * @NoAdminRequired
 	 * @NoCSRFRequired
 	 * @UseSession
-	 *
-	 * @return Http\RedirectResponse
 	 * @throws Error
 	 */
-	public function singleLogoutService() {
+	public function singleLogoutService(): Http\RedirectResponse {
 		$isFromGS = ($this->config->getSystemValue('gs.enabled', false) &&
 					 $this->config->getSystemValue('gss.mode', '') === 'master');
 
@@ -528,7 +496,7 @@ class SAMLController extends Controller {
 
 				$idp = $decoded['idp'] ?? null;
 				$pass = true;
-			} catch (\Exception $e) {
+			} catch (\Exception) {
 			}
 		} else {
 			// standard request : need read CRSF check
@@ -562,7 +530,7 @@ class SAMLController extends Controller {
 				try {
 					$targetUrl = $auth->logout(null, [], $nameId, $sessionIndex, $stay, $nameIdFormat, $nameIdNameQualifier, $nameIdSPNameQualifier);
 				} catch (Error $e) {
-					$this->logger->logException($e, ['level' => ILogger::WARN]);
+					$this->logger->warning($e->getMessage(), ['exception' => $e, 'app' => $this->appName]);
 					$this->userSession->logout();
 				}
 			}
@@ -598,7 +566,7 @@ class SAMLController extends Controller {
 				if ($auth->getLastErrorReason() === null) {
 					return [$targetUrl, $auth];
 				}
-			} catch (Error $e) {
+			} catch (Error) {
 				continue;
 			}
 		}
@@ -610,7 +578,7 @@ class SAMLController extends Controller {
 	 * @NoCSRFRequired
 	 * @OnlyUnauthenticatedUsers
 	 */
-	public function notProvisioned() {
+	public function notProvisioned(): Http\TemplateResponse {
 		return new Http\TemplateResponse($this->appName, 'notProvisioned', [], 'guest');
 	}
 
@@ -619,7 +587,7 @@ class SAMLController extends Controller {
 	 * @NoCSRFRequired
 	 * @OnlyUnauthenticatedUsers
 	 */
-	public function notPermitted() {
+	public function notPermitted(): Http\TemplateResponse {
 		return new Http\TemplateResponse($this->appName, 'notPermitted', [], 'guest');
 	}
 
@@ -627,10 +595,8 @@ class SAMLController extends Controller {
 	 * @PublicPage
 	 * @NoCSRFRequired
 	 * @OnlyUnauthenticatedUsers
-	 * @param string $message
-	 * @return Http\TemplateResponse
 	 */
-	public function genericError($message) {
+	public function genericError(string $message): Http\TemplateResponse {
 		if (empty($message)) {
 			$message = $this->l->t('Unknown error, please check the log file for more details.');
 		}
@@ -641,10 +607,8 @@ class SAMLController extends Controller {
 	 * @PublicPage
 	 * @NoCSRFRequired
 	 * @OnlyUnauthenticatedUsers
-	 * @param string $redirectUrl
-	 * @return Http\TemplateResponse
 	 */
-	public function selectUserBackEnd($redirectUrl) {
+	public function selectUserBackEnd(string $redirectUrl): Http\TemplateResponse {
 		$attributes = ['loginUrls' => []];
 
 		if ($this->samlSettings->allowMultipleUserBackEnds()) {
@@ -663,7 +627,7 @@ class SAMLController extends Controller {
 
 		$attributes['loginUrls']['ssoLogin'] = $this->getIdps($redirectUrl);
 
-		$attributes['useCombobox'] = count($attributes['loginUrls']['ssoLogin']) > 4 ? true : false;
+		$attributes['useCombobox'] = count($attributes['loginUrls']['ssoLogin']) > 4;
 
 
 		return new Http\TemplateResponse($this->appName, 'selectUserBackEnd', $attributes, 'guest');
@@ -671,16 +635,13 @@ class SAMLController extends Controller {
 
 	/**
 	 * get the IdPs showed at the login page
-	 *
-	 * @param $redirectUrl
-	 * @return array
 	 */
-	private function getIdps($redirectUrl) {
+	private function getIdps(string $redirectUrl): array {
 		$result = [];
 		$idps = $this->samlSettings->getListOfIdps();
 		foreach ($idps as $idpId => $displayName) {
 			$result[] = [
-				'url' => $this->getSSOUrl($redirectUrl, $idpId),
+				'url' => $this->getSSOUrl($redirectUrl, (string)$idpId),
 				'display-name' => $this->getSSODisplayName($displayName),
 			];
 		}
@@ -688,21 +649,15 @@ class SAMLController extends Controller {
 		return $result;
 	}
 
-	/**
-	 * get SSO URL
-	 *
-	 * @param $redirectUrl
-	 * @param idp identifier
-	 * @return string
-	 */
-	private function getSSOUrl($redirectUrl, $idp) {
+	private function getSSOUrl(string $redirectUrl, string $idp): string {
 		$originalUrl = '';
 		if (!empty($redirectUrl)) {
 			$originalUrl = $this->urlGenerator->getAbsoluteURL($redirectUrl);
 		}
 
-
-		$csrfToken = \OC::$server->getCsrfTokenManager()->getToken();
+		/** @var CsrfTokenManager $csrfTokenManager */
+		$csrfTokenManager = Server::get(CsrfTokenManager::class);
+		$csrfToken = $csrfTokenManager->getToken();
 		$ssoUrl = $this->urlGenerator->linkToRouteAbsolute(
 			'user_saml.SAML.login',
 			[
@@ -717,11 +672,8 @@ class SAMLController extends Controller {
 
 	/**
 	 * return the display name of the SSO identity provider
-	 *
-	 * @param $displayName
-	 * @return string
 	 */
-	protected function getSSODisplayName($displayName) {
+	protected function getSSODisplayName(?string $displayName): string {
 		if (empty($displayName)) {
 			$displayName = $this->l->t('SSO & SAML log in');
 		}
@@ -731,10 +683,8 @@ class SAMLController extends Controller {
 
 	/**
 	 * get Nextcloud login URL
-	 *
-	 * @return string
 	 */
-	private function getDirectLoginUrl($redirectUrl) {
+	private function getDirectLoginUrl(string $redirectUrl): string {
 		$directUrl = $this->urlGenerator->linkToRouteAbsolute('core.login.tryLogin', [
 			'direct' => '1',
 			'redirect_url' => $redirectUrl,
@@ -745,10 +695,8 @@ class SAMLController extends Controller {
 	/**
 	 * @PublicPage
 	 * @NoCSRFRequired
-	 *
-	 * @return Http\TemplateResponse
 	 */
-	public function base() {
+	public function base(): Http\TemplateResponse {
 		$message = $this->l->t('This page should not be visited directly.');
 		return new Http\TemplateResponse($this->appName, 'error', ['message' => $message], 'guest');
 	}

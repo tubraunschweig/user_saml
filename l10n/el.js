@@ -29,8 +29,8 @@ OC.L10N.register(
     "Attribute to map the displayname to." : "Χαρακτηριστικό για τη χαρτογράφηση του ονόματος εμφάνισης.",
     "Attribute to map the email address to." : "Χαρακτηριστικό για τη χαρτογράφηση της διεύθυνσης αλληλογραφίας.",
     "Attribute to map the quota to." : "Χαρακτηριστικό χαρτογράφησης της ποσόστωσης.",
-    "Attribute to map the users groups to." : "Χαρακτηριστικό χαρτογράφησης της ομάδας χρηστών.",
     "Attribute to map the users home to." : "Χαρακτηριστικό χαρτογράφησης της οικίας χρηστών.",
+    "Attribute to map the users groups to." : "Χαρακτηριστικό χαρτογράφησης της ομάδας χρηστών.",
     "Email address" : "Διεύθυνση αλληλογραφίας",
     "Encrypted" : "Κρυπτογραφημένο",
     "Entity" : "Οντότητα",
@@ -40,7 +40,6 @@ OC.L10N.register(
     "Unspecified" : "Απροσδιόριστος",
     "Windows domain qualified name" : "Χαρακτηριστικό όνομα τομέα των Windows",
     "X509 subject name" : "Όνομα θέματος X509",
-    "Use SAML auth for the %s desktop clients (requires user re-authentication)" : "Χρησιμοποιείστε πιστοποίηση SAML για τους %s σταθερούς υπολογιστές (απαιτείται έλεγχος επαλήθευσης από τον χρήστη)",
     "Optional display name of the identity provider (default: \"SSO & SAML log in\")" : "Προαιρετικά εμφάνιση ονόματος ταυτότητας παρόχου (προεπιλογή:\"SSO & SAML\")",
     "Allow the use of multiple user back-ends (e.g. LDAP)" : "Επιτρέψτε τη χρήση εφαρμογών παρασκηνίου (π.χ. LDAP)",
     "SSO & SAML authentication" : "Πιστοποίηση SSO & SAML",
@@ -59,7 +58,6 @@ OC.L10N.register(
     "Show Service Provider settings…" : "Εμφάνιση ρυθμίσεων Υπηρεσίας Παρόχου ...",
     "Name ID format" : "Μορφή ταυτότητας ονόματος",
     "Identity Provider Data" : "Στοιχεία παροχέα ταυτότητας",
-    "Configure your IdP settings here." : "Ρυθμίστε το IdP εδώ.",
     "Identifier of the IdP entity (must be a URI)" : "Αναγνωριστικό οντότητας IdP (πρέπει να είναι URI)",
     "URL Target of the IdP where the SP will send the Authentication Request Message" : "Αποδέκτης URL του IdP όπου το SP θα στείλει μήνυμα Αίτησης Ελέγχου Ταυτότητας",
     "Show optional Identity Provider settings…" : "Εμφάνιση προαιρετικών ρυθμίσεων Παροχέα Ταυτότητας ...",
@@ -81,7 +79,6 @@ OC.L10N.register(
     "Error" : "Σφάλμα",
     "Account not provisioned." : "Ο λογαριασμός δεν προβλέφθηκε.",
     "Your account is not provisioned, access to this service is thus not possible." : "Ο λογαριασμός σας δεν προβλέπεται, επομένως δεν είναι δυνατή η πρόσβαση σε αυτήν την υπηρεσία.",
-    "Login options:" : "Επιλογές σύνδεσης:",
-    "Choose a authentication provider" : "Επιλογή παρόχου πιστοποίησης"
+    "Login options:" : "Επιλογές σύνδεσης:"
 },
 "nplurals=2; plural=(n != 1);");

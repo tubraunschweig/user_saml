@@ -31,8 +31,8 @@ OC.L10N.register(
     "Attribute to map the displayname to." : "Atributua bistaratze-izena esleitzeko.",
     "Attribute to map the email address to." : "Atributua helbide elektronikoa esleitzeko.",
     "Attribute to map the quota to." : "Kuota esleitzeko atributua.",
-    "Attribute to map the users groups to." : "Atributua erabiltzaileen taldeak esleitzeko.",
     "Attribute to map the users home to." : "Atributua erabiltzaileak etxera esleitzeko.",
+    "Attribute to map the users groups to." : "Atributua erabiltzaileen taldeak esleitzeko.",
     "Group A, Group B, …" : "A taldea, B taldea, ...",
     "Email address" : "Helbide elektronikoa",
     "Encrypted" : "Zifratua",
@@ -43,7 +43,6 @@ OC.L10N.register(
     "Unspecified" : "Zehaztu gabea",
     "Windows domain qualified name" : "Windows domeinu-izen kualifikatua",
     "X509 subject name" : "X509 gaia",
-    "Use SAML auth for the %s desktop clients (requires user re-authentication)" : "Erabili SAML autentifikazioa mahaigaineko %s bezeroentzat (erabiltzaileak berriro autentifikatzea eskatzen du)",
     "Optional display name of the identity provider (default: \"SSO & SAML log in\")" : "Identitate-hornitzailearen aukerako bistaratze-izena (lehenetsia: \"SSO eta SAML saioa hasi\")",
     "Allow the use of multiple user back-ends (e.g. LDAP)" : "Baimendu erabiltzaile-atzealde anitzen erabilpena (adib. LDAP)",
     "SSO & SAML authentication" : "SSO eta SAML autentifikazioa",
@@ -64,7 +63,6 @@ OC.L10N.register(
     "Show Service Provider settings…" : "Erakutsi zerbitzu-hornitzailearen ezarpenak...",
     "Name ID format" : "Izena ID formatua",
     "Identity Provider Data" : "Identitate-hornitzailearen datuak",
-    "Configure your IdP settings here." : "Konfiguratu zure IdParen ezarpenak hemen.",
     "Identifier of the IdP entity (must be a URI)" : "IdP-entitatearen identifikatzailea (URI bat izan behar du)",
     "URL Target of the IdP where the SP will send the Authentication Request Message" : "IdParen URLaren helburua, SPk autentifikazio eskaera mezua bidaliko duenean",
     "Show optional Identity Provider settings…" : "Erakutsi identitate-hornitzailearen aukerako ezarpenak...",
@@ -88,7 +86,6 @@ OC.L10N.register(
     "Access denied." : "Sarbidea ukatua.",
     "Account not provisioned." : "Ez da kontua eman.",
     "Your account is not provisioned, access to this service is thus not possible." : "Zure kontua ez dago hornituta. Zerbitzu honetara sarbidea, ondorioz, ez da posiblea.",
-    "Login options:" : "Saio-hasiera aukerak:",
-    "Choose a authentication provider" : "Aukeratu autentifikazio-hornitzailea"
+    "Login options:" : "Saio-hasiera aukerak:"
 },
 "nplurals=2; plural=(n != 1);");

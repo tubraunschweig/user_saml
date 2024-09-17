@@ -1,46 +1,89 @@
+<!--
+ - SPDX-FileCopyrightText: 2017 Nextcloud GmbH and Nextcloud contributors
+ - SPDX-License-Identifier: AGPL-3.0-or-later
+-->
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## 5.2.7
+## 6.2.0
+
+### Added
+
+* [Feat(deps): Add Nextcloud 30 support (user_saml#827)](https://github.com/nextcloud/user_saml/pull/827)
+* [Add SPDX header (user_saml#841)](https://github.com/nextcloud/user_saml/pull/841)
 
 ### Fixed
 
-* [fix(upgrade): exception when upgrading from 27 to 28 (user_saml#818)](https://github.com/nextcloud/user_saml/pull/818)
-
-## 5.2.6
-
-### Fixed
-
-* [fix: Also create skeleton for users from environment based auth (user_saml#798)](https://github.com/nextcloud/user_saml/pull/798)
-
-## 5.2.5
-
-### Changed
-
-- [[stable-5.2] refactor(Controller): read parameter only once (user_saml#790)](https://github.com/nextcloud/user_saml/pull/790)
-
-## 5.2.4
-
-### Fixed
-
-- fix(firstLogin): use compatible GenericEvent [#778](https://github.com/nextcloud/user_saml/pull/778)
-
-## 5.2.3
-
-### Fixed
-
-- fix: Implement IGetDisplayNameBackend @juliushaertl [#773](https://github.com/nextcloud/user_saml/pull/773)
-- fix(login): do not hardcode IdP to 1 on redirect [#770](https://github.com/nextcloud/user_saml/pull/770)
-- fix: Do not try to validate metadata for environment variable config [#775](https://github.com/nextcloud/user_saml/pull/775)
+* [Fix: remove long-unused desktop option (user_saml#690)](https://github.com/nextcloud/user_saml/pull/690)
+* [Fix(Groups): take other DB errors into consideration (user_saml#839)](https://github.com/nextcloud/user_saml/pull/839)
+* [Feat: migrate from deprecated PublicEmitter to IEventDispatcher (user_saml#856)](https://github.com/nextcloud/user_saml/pull/856)
+* [Fix(Groups): take over members during migration (user_saml#863)](https://github.com/nextcloud/user_saml/pull/863)
+* [Perf(db): Avoid double querying (user_saml#834)](https://github.com/nextcloud/user_saml/pull/834)
 
 ### Dependencies
 
-- Chore(deps): Bump firebase/php-jwt from 6.8.0 to 6.8.1 in /3rdparty @dependabot[bot] [#749](https://github.com/nextcloud/user_saml/pull/749)
+* [Build(deps): bump firebase/php-jwt from 6.8.1 to 6.10.0 in /3rdparty (user_saml#844)](https://github.com/nextcloud/user_saml/pull/844)
+* [Build(deps): bump firebase/php-jwt from 6.10.0 to 6.10.1 in /3rdparty (user_saml#852)](https://github.com/nextcloud/user_saml/pull/852)
+* [Build(deps): bump onelogin/php-saml from 4.1.0 to 4.2.0 in /3rdparty (user_saml#854)](https://github.com/nextcloud/user_saml/pull/854)
 
-### Other
+## 6.1.3
 
-- ci(tests): do not run against NC master anymore @blizzz [#768](https://github.com/nextcloud/user_saml/pull/768)
-- Splitting CI images into separate ones @blizzz [#772](https://github.com/nextcloud/user_saml/pull/772)
+### Fixed
+
+* [Fix(Login): do not advertise CHECK_PASSWORD capability (user_saml#829)](https://github.com/nextcloud/user_saml/pull/829)
+
+## 6.1.2
+
+### Fixed
+
+* [Fix(UI): permanent labels for input elements (user_saml#816)](https://github.com/nextcloud/user_saml/pull/816)
+* [Fix(UI): auth provider picker did not react (user_saml#817)](https://github.com/nextcloud/user_saml/pull/817)
+* [Fix(User): load timezone handling related resources (user_saml#819)](https://github.com/nextcloud/user_saml/pull/819)
+* [Fix(UI): readable login dropdown chooser on dark mode (user_saml#820)](https://github.com/nextcloud/user_saml/pull/820)
+
+## 6.1.1
+
+### Fixed
+
+- [Fix: keep local groups when there is no group mapping set up (user_saml#806)](https://github.com/nextcloud/user_saml/pull/806)
+
+## 6.1.0
+
+### Added
+
+- [Group backend and migration of original SAML groups created as local database groups (user_saml#622)](https://github.com/nextcloud/user_saml/pull/622)
+
+### Fixed
+
+- [Fix: Also create skeleton for users from environment based auth (user_saml#797)](https://github.com/nextcloud/user_saml/pull/797)
+
+## 6.0.1
+
+### Added 
+
+- [Feat(dep): NC 29 comaptibility (user_saml#787)](https://github.com/nextcloud/user_saml/pull/787)
+
+### Changed
+
+- tranlsation updates
+- [Refactor(Controller): read parameter only once (user_saml#788)](https://github.com/nextcloud/user_saml/pull/788)
+
+## 6.0.0
+
+### Added
+
+- Added support for Nextcloud 28
+
+### Removed
+
+- Dropped support for Nextcloud 25-27
+
+### Fixed
+
+- do not hardcode IdP to 1 on redirect (#769)
+- Implement IGetDisplayNameBackend (#771)
+- Do not try to validate metadata for environment variable config (#774)
+- remove deprecated event and class (#779)
 
 ## 5.2.2
 

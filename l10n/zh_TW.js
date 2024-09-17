@@ -31,9 +31,10 @@ OC.L10N.register(
     "Attribute to map the displayname to." : "對映至顯示名稱的屬性。",
     "Attribute to map the email address to." : "對映至電子郵件的屬性。",
     "Attribute to map the quota to." : "對映至配額的屬性。",
-    "Attribute to map the users groups to." : "對映至使用者群組的屬性。",
     "Attribute to map the users home to." : "對映至使用者家目錄的屬性。",
+    "Attribute to map the users groups to." : "對映至使用者群組的屬性。",
     "Attribute to map the users MFA login status" : "對映至使用者 MFA 登入狀態的屬性。",
+    "Group Mapping Prefix, default: %s" : "群組對應前綴，預設值：%s",
     "Reject members of these groups. This setting has precedence over required memberships." : "拒絕這些群組的成員。此設定優先於所需的成員資格。",
     "Group A, Group B, …" : "群組 A, 群組 B……",
     "Require membership in these groups, if any." : "必須為這些群組的成員（若有）。",
@@ -46,7 +47,6 @@ OC.L10N.register(
     "Unspecified" : "未指定",
     "Windows domain qualified name" : "Windows 網域限定名稱",
     "X509 subject name" : "X509 主體名稱",
-    "Use SAML auth for the %s desktop clients (requires user re-authentication)" : "為 %s 桌面客戶端使用 SAML 認證（需要使用者重新驗證）",
     "Optional display name of the identity provider (default: \"SSO & SAML log in\")" : "身份提供者的選擇性顯示名稱（預設：「SSO & SAML 登入」）",
     "Allow the use of multiple user back-ends (e.g. LDAP)" : "允許使用多個使用者後端（例如 LDAP）",
     "SSO & SAML authentication" : "SSO & SAML 驗證",
@@ -67,7 +67,6 @@ OC.L10N.register(
     "Show Service Provider settings…" : "顯示服務提供者設定……",
     "Name ID format" : "名稱 ID 格式",
     "Identity Provider Data" : "身份提供者資料",
-    "Configure your IdP settings here." : "在此處設定您的 IdP 設定。",
     "Identifier of the IdP entity (must be a URI)" : "IdP 實體的識別字串（必須為 URI）",
     "URL Target of the IdP where the SP will send the Authentication Request Message" : "IdP 的 URL 目標，其中 SP 將會傳送驗證請求訊息",
     "Show optional Identity Provider settings…" : "顯示選擇性的身份提供者設定……",
@@ -95,6 +94,7 @@ OC.L10N.register(
     "Account not provisioned." : "尚未設定帳號。",
     "Your account is not provisioned, access to this service is thus not possible." : "尚未設定您的帳號，因此無法存取此服務。",
     "Login options:" : "登入選項：",
-    "Choose a authentication provider" : "選擇驗證提供者"
+    "Choose an authentication provider" : "選擇驗證提供者",
+    "Group Mapping Prefix, default: SAML_" : "群組對應前綴，預設值：SAML_"
 },
 "nplurals=1; plural=0;");

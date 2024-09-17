@@ -1,24 +1,8 @@
 <?php
 /**
- * @copyright Copyright (c) 2020 Maxime Besson <maxime.besson@worteks.com>
- *
- * @license GNU AGPL version 3 or any later version
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *
+ * SPDX-FileCopyrightText: 2020 Nextcloud GmbH and Nextcloud contributors
+ * SPDX-License-Identifier: AGPL-3.0-or-later
  */
-
 namespace OCA\User_SAML\Command;
 
 use OCA\User_SAML\Helper\TXmlHelper;
@@ -33,8 +17,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 class GetMetadata extends Command {
 	use TXmlHelper;
 
-	/** @var SAMLSettings */
-	private $SAMLSettings;
+	private SAMLSettings $SAMLSettings;
 
 	public function __construct(
 		SAMLSettings $SAMLSettings
@@ -43,7 +26,7 @@ class GetMetadata extends Command {
 		$this->SAMLSettings = $SAMLSettings;
 	}
 
-	protected function configure() {
+	protected function configure(): void {
 		$this
 			->setName('saml:metadata')
 			->setDescription('Get SAML Metadata')
@@ -64,12 +47,7 @@ EOT
 		;
 	}
 
-	/**
-	 * @param InputInterface $input
-	 * @param OutputInterface $output
-	 * @return void
-	 */
-	protected function execute(InputInterface $input, OutputInterface $output) {
+	protected function execute(InputInterface $input, OutputInterface $output): int {
 		$idp = (int)$input->getArgument('idp');
 		$settings = new Settings($this->SAMLSettings->getOneLoginSettingsArray($idp));
 		$metadata = $settings->getSPMetadata();
@@ -84,5 +62,6 @@ EOT
 				Error::METADATA_SP_INVALID
 			);
 		}
+		return 0;
 	}
 }

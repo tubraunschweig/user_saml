@@ -1,45 +1,35 @@
 <?php
 /**
- * @copyright Copyright (c) 2016 Lukas Reschke <lukas@statuscode.ch>
- *
- * @license GNU AGPL version 3 or any later version
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *
+ * SPDX-FileCopyrightText: 2016 Nextcloud GmbH and Nextcloud contributors
+ * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
 namespace OCA\User_SAML;
 
+use OC\Security\CSRF\CsrfTokenManager;
 use OCP\Authentication\IApacheBackend;
 use OCP\EventDispatcher\IEventDispatcher;
 use OCP\Files\NotPermittedException;
 use OCP\IConfig;
 use OCP\IDBConnection;
-use OCP\IGroupManager;
-use OCP\ILogger;
 use OCP\ISession;
 use OCP\IURLGenerator;
 use OCP\IUser;
 use OCP\IUserBackend;
 use OCP\IUserManager;
+use OCP\IUserSession;
+use OCP\Server;
+use OCP\User\Backend\ABackend;
+use OCP\User\Backend\ICountUsersBackend;
 use OCP\User\Backend\IGetDisplayNameBackend;
+use OCP\User\Backend\IGetHomeBackend;
 use OCP\User\Events\UserChangedEvent;
+use OCP\User\Events\UserFirstTimeLoggedInEvent;
 use OCP\UserInterface;
-use Symfony\Component\EventDispatcher\GenericEvent;
+use Psr\Log\LoggerInterface;
 use OCP\Share\IShare;
 
-class UserBackend implements IApacheBackend, UserInterface, IUserBackend, IGetDisplayNameBackend {
+class UserBackend extends ABackend implements IApacheBackend, IUserBackend, IGetDisplayNameBackend, ICountUsersBackend, IGetHomeBackend {
 	/** @var IConfig */
 	private $config;
 	/** @var IURLGenerator */
@@ -50,13 +40,13 @@ class UserBackend implements IApacheBackend, UserInterface, IUserBackend, IGetDi
 	private $db;
 	/** @var IUserManager */
 	private $userManager;
-	/** @var IGroupManager */
+	/** @var GroupManager */
 	private $groupManager;
 	/** @var \OCP\UserInterface[] */
 	private static $backends = [];
 	/** @var SAMLSettings */
 	private $settings;
-	/** @var ILogger */
+	/** @var LoggerInterface */
 	private $logger;
 	/** @var UserData */
 	private $userData;
@@ -69,9 +59,9 @@ class UserBackend implements IApacheBackend, UserInterface, IUserBackend, IGetDi
 		ISession $session,
 		IDBConnection $db,
 		IUserManager $userManager,
-		IGroupManager $groupManager,
+		GroupManager $groupManager,
 		SAMLSettings $settings,
-		ILogger $logger,
+		LoggerInterface $logger,
 		UserData $userData,
 		IEventDispatcher $eventDispatcher
 	) {
@@ -93,8 +83,7 @@ class UserBackend implements IApacheBackend, UserInterface, IUserBackend, IGetDi
 	 * @param string $uid
 	 * @return bool
 	 */
-	protected function userExistsInDatabase($uid) {
-		/* @var $qb IQueryBuilder */
+	protected function userExistsInDatabase(string $uid): bool {
 		$qb = $this->db->getQueryBuilder();
 		$qb->select('uid')
 			->from('user_saml_users')
@@ -114,7 +103,7 @@ class UserBackend implements IApacheBackend, UserInterface, IUserBackend, IGetDi
 	 * @param string $uid
 	 * @param array $attributes
 	 */
-	public function createUserIfNotExists($uid, array $attributes = []) {
+	public function createUserIfNotExists(string $uid, array $attributes = []): void {
 		if (!$this->userExistsInDatabase($uid)) {
 			$values = [
 				'uid' => $uid,
@@ -123,16 +112,16 @@ class UserBackend implements IApacheBackend, UserInterface, IUserBackend, IGetDi
 			// Try to get the mapped home directory of the user
 			try {
 				$home = $this->getAttributeValue('saml-attribute-mapping-home_mapping', $attributes);
-			} catch (\InvalidArgumentException $e) {
+			} catch (\InvalidArgumentException) {
 				$home = '';
 			}
 
 			if ($home !== '') {
 				//if attribute's value is an absolute path take this, otherwise append it to data dir
 				//check for / at the beginning or pattern c:\ resp. c:/
-				if ('/' !== $home[0]
-				   && !(3 < strlen($home) && ctype_alpha($home[0])
-					   && $home[1] === ':' && ('\\' === $home[2] || '/' === $home[2]))
+				if ($home[0] !== '/'
+				   && !(strlen($home) > 3 && ctype_alpha($home[0])
+					   && $home[1] === ':' && ($home[2] === '\\' || $home[2] === '/'))
 				) {
 					$home = $this->config->getSystemValue('datadirectory',
 						\OC::$SERVERROOT.'/data') . '/' . $home;
@@ -141,7 +130,6 @@ class UserBackend implements IApacheBackend, UserInterface, IUserBackend, IGetDi
 				$values['home'] = $home;
 			}
 
-			/* @var $qb IQueryBuilder */
 			$qb = $this->db->getQueryBuilder();
 			$qb->insert('user_saml_users');
 			foreach ($values as $column => $value) {
@@ -154,68 +142,21 @@ class UserBackend implements IApacheBackend, UserInterface, IUserBackend, IGetDi
 	}
 
 	/**
-	 * @param string $uid
 	 * @throws \OCP\Files\NotFoundException
 	 */
-	public function initializeHomeDir($uid) {
+	public function initializeHomeDir(string $uid): void {
 		### Code taken from lib/private/User/Session.php - function prepareUserLogin() ###
 		//trigger creation of user home and /files folder
 		$userFolder = \OC::$server->getUserFolder($uid);
 		try {
 			// copy skeleton
 			\OC_Util::copySkeleton($uid, $userFolder);
-		} catch (NotPermittedException $ex) {
+		} catch (NotPermittedException) {
 			// read only uses
 		}
 		// trigger any other initialization
 		$user = $this->userManager->get($uid);
-		\OC::$server->getEventDispatcher()->dispatch(IUser::class . '::firstLogin', new GenericEvent($user));
-	}
-
-	/**
-	 * Check if backend implements actions
-	 * @param int $actions bitwise-or'ed actions
-	 * @return boolean
-	 *
-	 * Returns the supported actions as int to be
-	 * compared with \OC\User\Backend::CREATE_USER etc.
-	 * @since 4.5.0
-	 */
-	public function implementsActions($actions) {
-		$availableActions = \OC\User\Backend::CHECK_PASSWORD;
-		$availableActions |= \OC\User\Backend::GET_DISPLAYNAME;
-		$availableActions |= \OC\User\Backend::GET_HOME;
-		$availableActions |= \OC\User\Backend::COUNT_USERS;
-		return (bool)($availableActions & $actions);
-	}
-
-	/**
-	 * Check if the provided token is correct
-	 * @param string $uid The username
-	 * @param string $password The password
-	 * @return string
-	 *
-	 * Check if the password is correct without logging in the user
-	 * returns the user id or false
-	 */
-	public function checkPassword($uid, $password) {
-		/* @var $qb IQueryBuilder */
-		$qb = $this->db->getQueryBuilder();
-		$qb->select('token')
-			->from('user_saml_auth_token')
-			->where($qb->expr()->eq('uid', $qb->createNamedParameter($uid)))
-			->setMaxResults(1000);
-		$result = $qb->execute();
-		$data = $result->fetchAll();
-		$result->closeCursor();
-
-		foreach ($data as $passwords) {
-			if (password_verify($password, $passwords['token'])) {
-				return $uid;
-			}
-		}
-
-		return false;
+		$this->eventDispatcher->dispatchTyped(new UserFirstTimeLoggedInEvent($user));
 	}
 
 	/**
@@ -225,36 +166,32 @@ class UserBackend implements IApacheBackend, UserInterface, IUserBackend, IGetDi
 	 * @since 4.5.0
 	 */
 	public function deleteUser($uid) {
-		if ($this->userExistsInDatabase($uid)) {
-			/* @var $qb IQueryBuilder */
-			$qb = $this->db->getQueryBuilder();
-			$qb->delete('user_saml_users')
-				->where($qb->expr()->eq('uid', $qb->createNamedParameter($uid)))
-				->execute();
-			return true;
-		}
-		return false;
+		$qb = $this->db->getQueryBuilder();
+		$affected = $qb->delete('user_saml_users')
+			->where($qb->expr()->eq('uid', $qb->createNamedParameter($uid)))
+			->executeStatement();
+		return $affected > 0;
 	}
 
 	/**
 	 * Returns the user's home directory, if home directory mapping is set up.
 	 *
 	 * @param string $uid the username
-	 * @return string
+	 * @return string|bool
 	 */
-	public function getHome($uid) {
-		if ($this->userExistsInDatabase($uid)) {
-			$qb = $this->db->getQueryBuilder();
-			$qb->select('home')
-				->from('user_saml_users')
-				->where($qb->expr()->eq('uid', $qb->createNamedParameter($uid)))
-				->setMaxResults(1);
-			$result = $qb->execute();
-			$users = $result->fetchAll();
-			if (isset($users[0]['home'])) {
-				return $users[0]['home'];
-			}
+	public function getHome(string $uid) {
+		$qb = $this->db->getQueryBuilder();
+		$qb->select('home')
+			->from('user_saml_users')
+			->where($qb->expr()->eq('uid', $qb->createNamedParameter($uid)))
+			->setMaxResults(1);
+		$result = $qb->executeQuery();
+		$users = $result->fetchAll();
+		$result->closeCursor();
+		if (isset($users[0]['home'])) {
+			return $users[0]['home'];
 		}
+		return false;
 	}
 
 	/**
@@ -359,16 +296,12 @@ class UserBackend implements IApacheBackend, UserInterface, IUserBackend, IGetDi
 			return $backend->setDisplayName($uid, $displayName);
 		}
 
-		if ($this->userExistsInDatabase($uid)) {
-			$qb = $this->db->getQueryBuilder();
-			$qb->update('user_saml_users')
-				->set('displayname', $qb->createNamedParameter($displayName))
-				->where($qb->expr()->eq('uid', $qb->createNamedParameter($uid)))
-				->execute();
-			return true;
-		}
-
-		return false;
+		$qb = $this->db->getQueryBuilder();
+		$affected = $qb->update('user_saml_users')
+			->set('displayname', $qb->createNamedParameter($displayName))
+			->where($qb->expr()->eq('uid', $qb->createNamedParameter($uid)))
+			->executeStatement();
+		return $affected > 0;
 	}
 
 	/**
@@ -381,21 +314,19 @@ class UserBackend implements IApacheBackend, UserInterface, IUserBackend, IGetDi
 	public function getDisplayName($uid): string {
 		if ($backend = $this->getActualUserBackend($uid)) {
 			return $backend->getDisplayName($uid);
-		} else {
-			if ($this->userExistsInDatabase($uid)) {
-				$qb = $this->db->getQueryBuilder();
-				$qb->select('displayname')
-					->from('user_saml_users')
-					->where($qb->expr()->eq('uid', $qb->createNamedParameter($uid)))
-					->setMaxResults(1);
-				$result = $qb->execute();
-				$users = $result->fetchAll();
-				if (isset($users[0]['displayname']) && $users[0]['displayname']) {
-					return $users[0]['displayname'];
-				}
-			}
 		}
 
+		$qb = $this->db->getQueryBuilder();
+		$qb->select('displayname')
+			->from('user_saml_users')
+			->where($qb->expr()->eq('uid', $qb->createNamedParameter($uid)))
+			->setMaxResults(1);
+		$result = $qb->executeQuery();
+		$users = $result->fetchAll();
+		$result->closeCursor();
+		if (isset($users[0]['displayname'])) {
+			return $users[0]['displayname'];
+		}
 		return $uid;
 	}
 
@@ -473,35 +404,25 @@ class UserBackend implements IApacheBackend, UserInterface, IUserBackend, IGetDi
 			return '';
 		}
 
+		$tokenManager = Server::get(CsrfTokenManager::class);
 		return $this->urlGenerator->linkToRouteAbsolute(
 			'user_saml.SAML.singleLogoutService',
 			[
-				'requesttoken' => \OC::$server->getCsrfTokenManager()->getToken()->getEncryptedValue(),
+				'requesttoken' => $tokenManager->getToken()->getEncryptedValue(),
 			]
 		);
 	}
 
 	/**
-	 * Logout attribute for Nextcloud < 12.0.3
-	 *
-	 * @return string
-	 */
-	public function getLogoutAttribute() {
-		return 'style="display:none;"';
-	}
-
-	/**
 	 * return user data from the idp
-	 *
-	 * @return mixed
 	 */
-	public function getUserData() {
+	public function getUserData(): array {
 		$userData = $this->session->get('user_saml.samlUserData');
 		$userData = $this->formatUserData($userData);
 
 		// make sure that a valid UID is given
 		if (empty($userData['formatted']['uid'])) {
-			$this->logger->error('No valid uid given, please check your attribute mapping. Got uid: {uid}', ['app' => $this->appName, 'uid' => $userData['uid']]);
+			$this->logger->error('No valid uid given, please check your attribute mapping. Got uid: {uid}', ['app' => 'user_saml', 'uid' => $userData['uid']]);
 			throw new \InvalidArgumentException('No valid uid given, please check your attribute mapping. Got uid: ' . $userData['uid']);
 		}
 
@@ -510,23 +431,20 @@ class UserBackend implements IApacheBackend, UserInterface, IUserBackend, IGetDi
 
 	/**
 	 * format user data and map them to the configured attributes
-	 *
-	 * @param $attributes
-	 * @return array
 	 */
-	private function formatUserData($attributes) {
+	private function formatUserData($attributes): array {
 		$this->userData->setAttributes($attributes);
 
 		$result = ['formatted' => [], 'raw' => $attributes];
 
 		try {
 			$result['formatted']['email'] = $this->getAttributeValue('saml-attribute-mapping-email_mapping', $attributes);
-		} catch (\InvalidArgumentException $e) {
+		} catch (\InvalidArgumentException) {
 			$result['formatted']['email'] = null;
 		}
 		try {
 			$result['formatted']['displayName'] = $this->getAttributeValue('saml-attribute-mapping-displayName_mapping', $attributes);
-		} catch (\InvalidArgumentException $e) {
+		} catch (\InvalidArgumentException) {
 			$result['formatted']['displayName'] = null;
 		}
 		try {
@@ -534,19 +452,19 @@ class UserBackend implements IApacheBackend, UserInterface, IUserBackend, IGetDi
 			if ($result['formatted']['quota'] === '') {
 				$result['formatted']['quota'] = 'default';
 			}
-		} catch (\InvalidArgumentException $e) {
+		} catch (\InvalidArgumentException) {
 			$result['formatted']['quota'] = null;
 		}
 
 		try {
 			$result['formatted']['groups'] = $this->getAttributeArrayValue('saml-attribute-mapping-group_mapping', $attributes);
-		} catch (\InvalidArgumentException $e) {
+		} catch (\InvalidArgumentException) {
 			$result['formatted']['groups'] = null;
 		}
 
 		try {
 			$result['formatted']['mfaVerified'] = $this->getAttributeValue('saml-attribute-mapping-mfa_mapping', $attributes);
-		} catch (\InvalidArgumentException $e) {
+		} catch (\InvalidArgumentException) {
 			$result['formatted']['mfaVerified'] = null;
 		}
 
@@ -561,7 +479,7 @@ class UserBackend implements IApacheBackend, UserInterface, IUserBackend, IGetDi
 	 * @since 6.0.0
 	 */
 	public function getCurrentUserId() {
-		$user = \OC::$server->getUserSession()->getUser();
+		$user = Server::get(IUserSession::class)->getUser();
 
 		if ($user instanceof IUser && $this->session->get('user_saml.samlUserData')) {
 			$uid = $user->getUID();
@@ -589,10 +507,8 @@ class UserBackend implements IApacheBackend, UserInterface, IUserBackend, IGetDi
 
 	/**
 	 * Whether autoprovisioning is enabled or not
-	 *
-	 * @return bool
 	 */
-	public function autoprovisionAllowed() {
+	public function autoprovisionAllowed(): bool {
 		return $this->config->getAppValue('user_saml', 'general-require_provisioned_account', '0') === '0';
 	}
 
@@ -618,7 +534,7 @@ class UserBackend implements IApacheBackend, UserInterface, IUserBackend, IGetDi
 	 *
 	 * @param \OCP\UserInterface[] $backends
 	 */
-	public function registerBackends(array $backends) {
+	public function registerBackends(array $backends): void {
 		self::$backends = $backends;
 	}
 
@@ -677,8 +593,7 @@ class UserBackend implements IApacheBackend, UserInterface, IUserBackend, IGetDi
 		return $value;
 	}
 
-	public function updateAttributes($uid,
-		array $attributes) {
+	public function updateAttributes(string $uid, array $attributes): void {
 		$user = $this->userManager->get($uid);
 		try {
 			$newEmail = $this->getAttributeValue('saml-attribute-mapping-email_mapping', $attributes);
@@ -733,34 +648,9 @@ class UserBackend implements IApacheBackend, UserInterface, IUserBackend, IGetDi
 				$user->setQuota($newQuota);
 			}
 
-			if ($newGroups !== null) {
-				$groupManager = $this->groupManager;
-				$oldGroups = $groupManager->getUserGroupIds($user);
-
-				$groupsToAdd = array_unique(array_diff($newGroups, $oldGroups));
-				$groupsToRemove = array_diff($oldGroups, $newGroups);
-
-				foreach ($groupsToAdd as $group) {
-					if (!($groupManager->groupExists($group))) {
-						$groupManager->createGroup($group);
-					}
-					$groupManager->get($group)->addUser($user);
-				}
-
-				foreach ($groupsToRemove as $group) {
-					if(@preg_match('/(^App\$.*$)/',$group)) {
-						continue;
-					}
-					if(preg_last_error()){
-						$this->logger->error('preg_match for groups throwing error: '. preg_last_error_msg());
-					}
-					$groupManager->get($group)->removeUser($user);
-				}
-			}
+			$this->groupManager->handleIncomingGroups($user, $newGroups ?? []);
 		}
 	}
-
-
 
 	public function countUsers() {
 		$query = $this->db->getQueryBuilder();

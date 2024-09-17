@@ -1,41 +1,25 @@
 <?php
 /**
- * @copyright Copyright (c) 2016 Lukas Reschke <lukas@statuscode.ch>
- *
- * @license GNU AGPL version 3 or any later version
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *
+ * SPDX-FileCopyrightText: 2016 Nextcloud GmbH and Nextcloud contributors
+ * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
 namespace OCA\User_SAML\Tests\Settings;
 
+use OCA\User_SAML\GroupManager;
 use OCA\User_SAML\SAMLSettings;
 use OCA\User_SAML\UserBackend;
 use OCA\User_SAML\UserData;
 use OCP\EventDispatcher\IEventDispatcher;
 use OCP\IConfig;
 use OCP\IDBConnection;
-use OCP\IGroup;
-use OCP\IGroupManager;
-use OCP\ILogger;
 use OCP\ISession;
 use OCP\IURLGenerator;
 use OCP\IUser;
 use OCP\IUserManager;
 use OCP\User\Events\UserChangedEvent;
 use PHPUnit\Framework\MockObject\MockObject;
+use Psr\Log\LoggerInterface;
 use Test\TestCase;
 
 class UserBackendTest extends TestCase {
@@ -51,13 +35,13 @@ class UserBackendTest extends TestCase {
 	private $db;
 	/** @var IUserManager|MockObject */
 	private $userManager;
-	/** @var IGroupManager|MockObject */
+	/** @var GroupManager|MockObject */
 	private $groupManager;
 	/** @var UserBackend|MockObject */
 	private $userBackend;
 	/** @var SAMLSettings|MockObject */
 	private $SAMLSettings;
-	/** @var ILogger|MockObject */
+	/** @var LoggerInterface|MockObject */
 	private $logger;
 	/** @var IEventDispatcher|MockObject */
 	private $eventDispatcher;
@@ -70,9 +54,9 @@ class UserBackendTest extends TestCase {
 		$this->session = $this->createMock(ISession::class);
 		$this->db = $this->createMock(IDBConnection::class);
 		$this->userManager = $this->createMock(IUserManager::class);
-		$this->groupManager = $this->createMock(IGroupManager::class);
+		$this->groupManager = $this->createMock(GroupManager::class);
 		$this->SAMLSettings = $this->getMockBuilder(SAMLSettings::class)->disableOriginalConstructor()->getMock();
-		$this->logger = $this->createMock(ILogger::class);
+		$this->logger = $this->createMock(LoggerInterface::class);
 		$this->userData = $this->createMock(UserData::class);
 		$this->eventDispatcher = $this->createMock(IEventDispatcher::class);
 	}
@@ -149,6 +133,10 @@ class UserBackendTest extends TestCase {
 			->method('getDisplayName')
 			->with('ExistingUser')
 			->willReturn('');
+		$this->groupManager
+			->expects($this->once())
+			->method('handleIncomingGroups')
+			->with($user, []);
 		$this->userBackend->updateAttributes('ExistingUser', []);
 	}
 
@@ -172,8 +160,6 @@ class UserBackendTest extends TestCase {
 		$this->getMockedBuilder(['getDisplayName', 'setDisplayName']);
 		/** @var IUser|MockObject $user */
 		$user = $this->createMock(IUser::class);
-		$groupA = $this->createMock(IGroup::class);
-		$groupC = $this->createMock(IGroup::class);
 
 		$this->config
 			->expects($this->at(0))
@@ -229,42 +215,10 @@ class UserBackendTest extends TestCase {
 			->expects($this->once())
 			->method('setDisplayName')
 			->with('ExistingUser', 'New Displayname');
-
 		$this->groupManager
 			->expects($this->once())
-			->method('getUserGroupIds')
-			->with($user)
-			->willReturn(['groupA', 'groupB']);
-		$this->groupManager
-			->expects($this->once())
-			->method('groupExists')
-			->with('groupC')
-			->willReturn(false);
-		$this->groupManager
-			->expects($this->once())
-			->method('createGroup')
-			->with('groupC');
-
-		// updateAttributes first adds new groups, then removes old ones
-		// In this test groupA is removed from the user, groupB is unchanged
-		// and groupC is added
-		$this->groupManager
-			->expects($this->exactly(2))
-			->method('get')
-			->withConsecutive(['groupC'], ['groupA'])
-			->willReturnOnConsecutiveCalls($groupC, $groupA);
-		$groupA
-			->expects($this->once())
-			->method('removeUser')
-			->with($user);
-		$groupC
-			->expects($this->once())
-			->method('addUser')
-			->with($user);
-		$this->eventDispatcher->expects($this->once())
-			->method('dispatchTyped')
-			->with(new UserChangedEvent($user, 'displayName', 'New Displayname', ''));
-
+			->method('handleIncomingGroups')
+			->with($user, ['groupB', 'groupC']);
 		$this->userBackend->updateAttributes('ExistingUser', [
 			'email' => 'new@example.com',
 			'displayname' => 'New Displayname',
@@ -328,6 +282,10 @@ class UserBackendTest extends TestCase {
 		$this->eventDispatcher->expects($this->once())
 			->method('dispatchTyped')
 			->with(new UserChangedEvent($user, 'displayName', 'New Displayname', ''));
+		$this->groupManager
+			->expects($this->once())
+			->method('handleIncomingGroups')
+			->with($user, []);
 		$this->userBackend->updateAttributes('ExistingUser', ['email' => 'new@example.com', 'displayname' => 'New Displayname', 'quota' => '']);
 	}
 }

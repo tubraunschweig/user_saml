@@ -28,8 +28,8 @@ OC.L10N.register(
     "Attribute to map the displayname to." : "Atribut za preslikavo prikaznega imena.",
     "Attribute to map the email address to." : "Atribut za preslikavo elektronskega naslova.",
     "Attribute to map the quota to." : "Atribut za preslikavo količinske omejitve.",
-    "Attribute to map the users groups to." : "Atribut za preslikavo uporabniških skupin.",
     "Attribute to map the users home to." : "Atribut za preslikavo uporabnikove osebne mape.",
+    "Attribute to map the users groups to." : "Atribut za preslikavo uporabniških skupin.",
     "Email address" : "Elektronski naslov",
     "Encrypted" : "Šifrirano",
     "Entity" : "Entiteta",
@@ -39,7 +39,6 @@ OC.L10N.register(
     "Unspecified" : "Nedoločeno",
     "Windows domain qualified name" : "Ime domene Windows",
     "X509 subject name" : "Ime predmeta X509",
-    "Use SAML auth for the %s desktop clients (requires user re-authentication)" : "Uporabi overitev SAML za odjemalec %s (zahteva ponovno overitev uporabnika)",
     "Optional display name of the identity provider (default: \"SSO & SAML log in\")" : "Izbirno prikazno ime ponudnika istovetnosti (privzeto: »Prijava SSO in SAML«)",
     "Allow the use of multiple user back-ends (e.g. LDAP)" : "Dovoli uporabo več uporabniških računov (na primer LDAP)",
     "SSO & SAML authentication" : "Overitev SSO in SAML",
@@ -58,7 +57,6 @@ OC.L10N.register(
     "Show Service Provider settings…" : "Pokaži nastavitve ponudnika storitve ...",
     "Name ID format" : "Zapis določila ID imena",
     "Identity Provider Data" : "Podatki ponudnika istovetnosti",
-    "Configure your IdP settings here." : "Prilagoditev nastavitev IdP.",
     "Identifier of the IdP entity (must be a URI)" : "Dololilo IdP (zapisano kot naslov URI)",
     "URL Target of the IdP where the SP will send the Authentication Request Message" : "Ciljni naslov URL za IdP, kamor bo ponudnik storitev poslal sporočilo o zahtevi overitve.",
     "Show optional Identity Provider settings…" : "Pokaži izbirne nastavitve IP (ponudnika istovetnosti) ...",
@@ -80,7 +78,6 @@ OC.L10N.register(
     "Error" : "Napaka",
     "Account not provisioned." : "Račun ni povezan.",
     "Your account is not provisioned, access to this service is thus not possible." : "Naveden račun ni povezan, zato dostop do te storitve ni mogoč.",
-    "Login options:" : "Možnosti prijave:",
-    "Choose a authentication provider" : "Izbor ponudnika overitve"
+    "Login options:" : "Možnosti prijave:"
 },
 "nplurals=4; plural=(n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || n%100==4 ? 2 : 3);");

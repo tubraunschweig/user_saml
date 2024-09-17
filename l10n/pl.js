@@ -31,8 +31,8 @@ OC.L10N.register(
     "Attribute to map the displayname to." : "Atrybut do mapowania wyświetlanej nazwy użytkownika.",
     "Attribute to map the email address to." : "Atrybut do zamapowania adresu e-mail.",
     "Attribute to map the quota to." : "Atrybut do mapowania przydziału.",
-    "Attribute to map the users groups to." : "Atrybut do mapowania grup użytkowników.",
     "Attribute to map the users home to." : "Atrybut do mapowania katalogów domowych użytkowników.",
+    "Attribute to map the users groups to." : "Atrybut do mapowania grup użytkowników.",
     "Attribute to map the users MFA login status" : "Atrybut do mapowania statusu logowania użytkowników MFA",
     "Reject members of these groups. This setting has precedence over required memberships." : "Odrzuć członków tych grup. To ustawienie ma pierwszeństwo przed wymaganymi członkostwami.",
     "Group A, Group B, …" : "Grupa A, Grupa B,…",
@@ -46,7 +46,6 @@ OC.L10N.register(
     "Unspecified" : "Nieokreślony",
     "Windows domain qualified name" : "Zakwalifikowana nazwa domeny Windows",
     "X509 subject name" : "Nazwa X509",
-    "Use SAML auth for the %s desktop clients (requires user re-authentication)" : "Użyj uwierzytelnienia LDAP dla %s klienta desktopowego (wymaga ponownego uwierzytelnienia)",
     "Optional display name of the identity provider (default: \"SSO & SAML log in\")" : "Opcjonalna wyświetlana nazwa dostawcy tożsamości (domyślnie: \"Logowanie SSO i SAML\")",
     "Allow the use of multiple user back-ends (e.g. LDAP)" : "Zezwalaj na korzystanie z zaplecza przez wielu użytkowników (np. LDAP)",
     "SSO & SAML authentication" : "Uwierzytelenienie SSO i SAML",
@@ -67,7 +66,6 @@ OC.L10N.register(
     "Show Service Provider settings…" : "Pokaż ustawienia dostawcy usług…",
     "Name ID format" : "Format nazwy ID",
     "Identity Provider Data" : "Dane od dostawcy tożsamości",
-    "Configure your IdP settings here." : "Skonfiguruj swoje ustawienia IdP.",
     "Identifier of the IdP entity (must be a URI)" : "Identyfikator jednostki IdP (musi być URI)",
     "URL Target of the IdP where the SP will send the Authentication Request Message" : "Adres URL IdP, z którego dostawca usług wyśle wiadomość o żądaniu uwierzytelnienia",
     "Show optional Identity Provider settings…" : "Pokaż opcjonalne ustawienia tożsamości dostawcy usług…",
@@ -94,7 +92,6 @@ OC.L10N.register(
     "Your account is denied, access to this service is thus not possible." : "Twoje konto zostało zablokowane, dostęp do tej usługi jest niemożliwe.",
     "Account not provisioned." : "Brak konta.",
     "Your account is not provisioned, access to this service is thus not possible." : "Nie posiadasz konta, stąd dostęp do tej usługi jest niemożliwy.",
-    "Login options:" : "Opcje logowania:",
-    "Choose a authentication provider" : "Wybierz dostawcę uwierzytelniania"
+    "Login options:" : "Opcje logowania:"
 },
 "nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && (n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);");

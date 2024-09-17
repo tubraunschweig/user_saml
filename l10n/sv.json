@@ -27,8 +27,8 @@
     "Attribute to map the displayname to." : "Attribut att mappa visningsnamnet till",
     "Attribute to map the email address to." : "Attribut att mappa epost-adress till.",
     "Attribute to map the quota to." : "Attribut att mappa quota till.",
-    "Attribute to map the users groups to." : "Attribut att mappa användargrupper till.",
     "Attribute to map the users home to." : "Attribut att mappa hemkataloger till.",
+    "Attribute to map the users groups to." : "Attribut att mappa användargrupper till.",
     "Email address" : "E-postadress",
     "Encrypted" : "Krypterad",
     "Entity" : "Entity",
@@ -38,7 +38,6 @@
     "Unspecified" : "Unspecified",
     "Windows domain qualified name" : "Windows domain qualified name",
     "X509 subject name" : "X509 subject name",
-    "Use SAML auth for the %s desktop clients (requires user re-authentication)" : "Använd SAML-autentisering för %s skrivbordsklienter (kräver att användarna loggar in på nytt)",
     "Optional display name of the identity provider (default: \"SSO & SAML log in\")" : "Frivilligt visningsnamn av den identifierande aktören (standard: \"SSO & SAML inloggning\")",
     "Allow the use of multiple user back-ends (e.g. LDAP)" : "Tillåt användning av flera användarkataloger (t.ex. LDAP)",
     "SSO & SAML authentication" : "SSO & SAML-autentisering",
@@ -57,7 +56,6 @@
     "Show Service Provider settings…" : "Visa leverantörsinställningar",
     "Name ID format" : "Name ID format",
     "Identity Provider Data" : "Identitetsleverantörsdata",
-    "Configure your IdP settings here." : "Konfigurera dina IdP-inställningar här.",
     "Identifier of the IdP entity (must be a URI)" : "Identifierare av IdP'n (måste vara en URI)",
     "URL Target of the IdP where the SP will send the Authentication Request Message" : "Webbadressmål av IdP där SP skickar autentiseringsförfrågningsmeddelandet",
     "Show optional Identity Provider settings…" : "Visa valbara Identity Provider inställningar...",
@@ -80,7 +78,6 @@
     "Your account is denied, access to this service is thus not possible." : "Ditt konto nekas, tillgång till denna tjänst är därför inte möjlig.",
     "Account not provisioned." : "Konto inte förberett",
     "Your account is not provisioned, access to this service is thus not possible." : "Ditt konto tillhandahålls inte, åtkomst till den här tjänsten är därför inte möjligt.",
-    "Login options:" : "Inloggningsalternativ:",
-    "Choose a authentication provider" : "Välj en autentiseringsleverantör"
+    "Login options:" : "Inloggningsalternativ:"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

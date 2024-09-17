@@ -1,22 +1,7 @@
 <?php
 /**
- * @copyright Copyright (c) 2016 Lukas Reschke <lukas@statuscode.ch>
- *
- * @license GNU AGPL version 3 or any later version
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *
+ * SPDX-FileCopyrightText: 2016 Nextcloud GmbH and Nextcloud contributors
+ * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
 namespace OCA\User_SAML\Tests\Controller;
@@ -33,7 +18,6 @@ use OCP\AppFramework\Http\RedirectResponse;
 use OCP\AppFramework\Http\TemplateResponse;
 use OCP\IConfig;
 use OCP\IL10N;
-use OCP\ILogger;
 use OCP\IRequest;
 use OCP\ISession;
 use OCP\IURLGenerator;
@@ -42,6 +26,7 @@ use OCP\IUserSession;
 use OCP\Security\ICrypto;
 use OCP\Security\ITrustedDomainHelper;
 use PHPUnit\Framework\MockObject\MockObject;
+use Psr\Log\LoggerInterface;
 use Test\TestCase;
 
 class SAMLControllerTest extends TestCase {
@@ -63,7 +48,7 @@ class SAMLControllerTest extends TestCase {
 	private $config;
 	/** @var IURLGenerator|\PHPUnit_Framework_MockObject_MockObject */
 	private $urlGenerator;
-	/** @var ILogger|\PHPUnit_Framework_MockObject_MockObject */
+	/** @var LoggerInterface|\PHPUnit_Framework_MockObject_MockObject */
 	private $logger;
 	/** @var IL10N|\PHPUnit_Framework_MockObject_MockObject */
 	private $l;
@@ -71,8 +56,7 @@ class SAMLControllerTest extends TestCase {
 	private $crypto;
 	/** @var SAMLController */
 	private $samlController;
-	/** @var ITrustedDomainHelper|MockObject */
-	private $trustedDomainController;
+	private ITrustedDomainHelper|MockObject $trustedDomainController;
 
 	protected function setUp(): void {
 		parent::setUp();
@@ -84,7 +68,7 @@ class SAMLControllerTest extends TestCase {
 		$this->userBackend = $this->createMock(UserBackend::class);
 		$this->config = $this->createMock(IConfig::class);
 		$this->urlGenerator = $this->createMock(IURLGenerator::class);
-		$this->logger = $this->createMock(ILogger::class);
+		$this->logger = $this->createMock(LoggerInterface::class);
 		$this->l = $this->createMock(IL10N::class);
 		$this->userResolver = $this->createMock(UserResolver::class);
 		$this->userData = $this->createMock(UserData::class);

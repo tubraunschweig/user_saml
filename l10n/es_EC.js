@@ -31,8 +31,8 @@ OC.L10N.register(
     "Attribute to map the displayname to." : "Atributo a mapear a displayname. ",
     "Attribute to map the email address to." : "Atributo a mapear a email address.",
     "Attribute to map the quota to." : "Atributo al cual mapear la cuota. ",
-    "Attribute to map the users groups to." : "Atributo de correspondiencia de grupos de usuarios.",
     "Attribute to map the users home to." : "Atributo para asignar al hogar de los usuarios.",
+    "Attribute to map the users groups to." : "Atributo de correspondiencia de grupos de usuarios.",
     "Attribute to map the users MFA login status" : "Atributo para asignar el estado de inicio de sesión MFA de los usuarios.",
     "Reject members of these groups. This setting has precedence over required memberships." : "Rechazar a los miembros de estos grupos. Esta configuración tiene prioridad sobre las membresías requeridas.",
     "Group A, Group B, …" : "Grupo A, Grupo B, ...",
@@ -46,7 +46,6 @@ OC.L10N.register(
     "Unspecified" : "No especificado",
     "Windows domain qualified name" : "Nombre calificado del dominio de Windows",
     "X509 subject name" : "Nombre del sujeto X509",
-    "Use SAML auth for the %s desktop clients (requires user re-authentication)" : "Por favor usa autenticación SAML para los %s clientes de escritorio (se requiere volver a autenticar)",
     "Optional display name of the identity provider (default: \"SSO & SAML log in\")" : "Nombre a desplegar opcional de la identidad del proveedor (valor por omisión: \"Inicio de sesión SSO & SAML\")",
     "Allow the use of multiple user back-ends (e.g. LDAP)" : "Permitir el uso de múltiples sistemas de back-end de usuario (p. ej. LDAP)",
     "SSO & SAML authentication" : "Autenticación SSO & SAML",
@@ -67,7 +66,6 @@ OC.L10N.register(
     "Show Service Provider settings…" : "Mostrar las configuraciones de Proveedor de Servicio...",
     "Name ID format" : "Formato del ID del nombre",
     "Identity Provider Data" : "Datos del Proveedor de Identidad",
-    "Configure your IdP settings here." : "Configura las configuraciones de IdP aquí. ",
     "Identifier of the IdP entity (must be a URI)" : "Identificador de la entidad IdP (debe ser un URI)",
     "URL Target of the IdP where the SP will send the Authentication Request Message" : "URL Destino del IdP donde el SP enviará automaticamente el Mensaje de Solicitud de Autenticación",
     "Show optional Identity Provider settings…" : "Mostrar las configuraciones opcionales del Proveedor de Identidad...",
@@ -94,7 +92,6 @@ OC.L10N.register(
     "Your account is denied, access to this service is thus not possible." : "Tu cuenta ha sido denegada, por lo tanto, no es posible acceder a este servicio.",
     "Account not provisioned." : "La cuenta no está aprovisionada. ",
     "Your account is not provisioned, access to this service is thus not possible." : "Tu cuenta no ha sido aprovisionada, por lo cual el acceso a este servico no es posible. ",
-    "Login options:" : "Opciones de inicio de sesión:",
-    "Choose a authentication provider" : "Elige un proveedor de autenticación"
+    "Login options:" : "Opciones de inicio de sesión:"
 },
 "nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;");

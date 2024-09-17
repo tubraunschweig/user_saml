@@ -31,9 +31,10 @@ OC.L10N.register(
     "Attribute to map the displayname to." : "السمة لتعيين اسم العرض إلى.",
     "Attribute to map the email address to." : "السمة لتعيين عنوان البريد الإلكتروني إلى.",
     "Attribute to map the quota to." : "السمة لتعيين الحصة إلى.",
-    "Attribute to map the users groups to." : "السمة لتعيين مجموعات المستخدمين إلى.",
     "Attribute to map the users home to." : "السمة لتعيين الصفحة الرئيسية للمستخدمين إلى.",
+    "Attribute to map the users groups to." : "السمة لتعيين مجموعات المستخدمين إلى.",
     "Attribute to map the users MFA login status" : "السمة لتعيين حالة تسجيل دخول مستخدمي المصادقة ثنائية العوامل",
+    "Group Mapping Prefix, default: %s" : "بادئة تعيين المجموعة Group Mapping Prefix، التلقائية: %s",
     "Reject members of these groups. This setting has precedence over required memberships." : "رفض أعضاء هذه المجموعات. هذا الإعداد له الأسبقية على العضويات المطلوبة.",
     "Group A, Group B, …" : "المجموعة أ ، المجموعة ب ، ...",
     "Require membership in these groups, if any." : "يتطلب العضوية في هذه المجموعات، إن وجدت.",
@@ -46,7 +47,6 @@ OC.L10N.register(
     "Unspecified" : "غير محدد",
     "Windows domain qualified name" : "اسم نطاق ويندوز المؤهل",
     "X509 subject name" : "اسم موضوع معيار X509",
-    "Use SAML auth for the %s desktop clients (requires user re-authentication)" : "استخدام مصادقة  SAML  لـ%sعملاء سطح المكتب (تتطلب إعادة مصادقة المستخدم)",
     "Optional display name of the identity provider (default: \"SSO & SAML log in\")" : "اسم العرض الاختياري لمزود الهوية (الافتراضي: \"تسجيل الدخول عبر تسجيل الدخول الأحادي \"SSO \" و SAML\")",
     "Allow the use of multiple user back-ends (e.g. LDAP)" : "السماح باستخدام واجهات مستخدم متعددة (على سبيل المثال خادوم بروتوكول LDAP)",
     "SSO & SAML authentication" : "المصادقة عبر SSO و SAML",
@@ -67,7 +67,6 @@ OC.L10N.register(
     "Show Service Provider settings…" : "عرض إعدادات مزود الخدمة ...",
     "Name ID format" : "تنسيق معرف الاسم",
     "Identity Provider Data" : "مُزوِّد بيانات الهوية",
-    "Configure your IdP settings here." : "ضبط إعدادات مزود الهوية \"IdP\" هنا.",
     "Identifier of the IdP entity (must be a URI)" : "معرّف كيان مزود الهوية (يجب أن يكون عنوان URI)",
     "URL Target of the IdP where the SP will send the Authentication Request Message" : "يستهدف مزود الهوية \"IdP\" عنوان URL حيث يقوم مزود الخدمة بإرسال رسالة طلب المصادقة",
     "Show optional Identity Provider settings…" : "عرض الإعدادات الاختيارية لمزود الهوية ...",
@@ -95,6 +94,7 @@ OC.L10N.register(
     "Account not provisioned." : "الحساب غير مزود بالخدمة.",
     "Your account is not provisioned, access to this service is thus not possible." : "حسابك غير مزود بالخدمة، وبالتالي لا يمكنك الوصول إلى هذه الخدمة.",
     "Login options:" : "خيارات تسجيل الدخول:",
-    "Choose a authentication provider" : "اختر مزود المصادقة"
+    "Choose an authentication provider" : "إختَر مزوداً للتحقُّق من الهُوِيّة",
+    "Group Mapping Prefix, default: SAML_" : "بادئة تعيين المجموعة Group Mapping Prefix، التلقائية: SAML_"
 },
 "nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;");

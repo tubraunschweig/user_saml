@@ -31,9 +31,10 @@ OC.L10N.register(
     "Attribute to map the displayname to." : "Attribute to map the displayname to.",
     "Attribute to map the email address to." : "Attribute to map the email address to.",
     "Attribute to map the quota to." : "Attribute to map the quota to.",
-    "Attribute to map the users groups to." : "Attribute to map the users groups to.",
     "Attribute to map the users home to." : "Attribute to map the users home to.",
+    "Attribute to map the users groups to." : "Attribute to map the users groups to.",
     "Attribute to map the users MFA login status" : "Attribute to map the users MFA login status",
+    "Group Mapping Prefix, default: %s" : "Group Mapping Prefix, default: %s",
     "Reject members of these groups. This setting has precedence over required memberships." : "Reject members of these groups. This setting has precedence over required memberships.",
     "Group A, Group B, …" : "Group A, Group B, …",
     "Require membership in these groups, if any." : "Require membership in these groups, if any.",
@@ -46,7 +47,6 @@ OC.L10N.register(
     "Unspecified" : "Unspecified",
     "Windows domain qualified name" : "Windows domain qualified name",
     "X509 subject name" : "X509 subject name",
-    "Use SAML auth for the %s desktop clients (requires user re-authentication)" : "Use SAML auth for the %s desktop clients (requires user re-authentication)",
     "Optional display name of the identity provider (default: \"SSO & SAML log in\")" : "Optional display name of the identity provider (default: \"SSO & SAML log in\")",
     "Allow the use of multiple user back-ends (e.g. LDAP)" : "Allow the use of multiple user back-ends (e.g. LDAP)",
     "SSO & SAML authentication" : "SSO & SAML authentication",
@@ -67,7 +67,6 @@ OC.L10N.register(
     "Show Service Provider settings…" : "Show Service Provider settings…",
     "Name ID format" : "Name ID format",
     "Identity Provider Data" : "Identity Provider Data",
-    "Configure your IdP settings here." : "Configure your IdP settings here.",
     "Identifier of the IdP entity (must be a URI)" : "Identifier of the IdP entity (must be a URI)",
     "URL Target of the IdP where the SP will send the Authentication Request Message" : "URL Target of the IdP where the SP will send the Authentication Request Message",
     "Show optional Identity Provider settings…" : "Show optional Identity Provider settings…",
@@ -95,6 +94,7 @@ OC.L10N.register(
     "Account not provisioned." : "Account not provisioned.",
     "Your account is not provisioned, access to this service is thus not possible." : "Your account is not provisioned, access to this service is thus not possible.",
     "Login options:" : "Login options:",
-    "Choose a authentication provider" : "Choose a authentication provider"
+    "Choose an authentication provider" : "Choose an authentication provider",
+    "Group Mapping Prefix, default: SAML_" : "Group Mapping Prefix, default: SAML_"
 },
 "nplurals=2; plural=(n != 1);");

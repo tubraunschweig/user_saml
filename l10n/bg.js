@@ -31,8 +31,8 @@ OC.L10N.register(
     "Attribute to map the displayname to." : "Атрибут за съпоставяне на показваното име.",
     "Attribute to map the email address to." : "Атрибут за съпоставяне на имейл адреса.",
     "Attribute to map the quota to." : "Атрибут за съпоставяне на квотата.",
-    "Attribute to map the users groups to." : "Атрибут за съпоставяне на групите потребители.",
     "Attribute to map the users home to." : "Атрибут за съпоставяне на потребителска директория.",
+    "Attribute to map the users groups to." : "Атрибут за съпоставяне на групите потребители.",
     "Attribute to map the users MFA login status" : "Атрибут за съпоставяне на статуса на влизане на потребителите в MFA",
     "Reject members of these groups. This setting has precedence over required memberships." : "Отхвърляне на членовете на тези групи. Тази настройка има предимство пред изискваното членство.",
     "Group A, Group B, …" : "Група A, Група B, ...",
@@ -46,7 +46,6 @@ OC.L10N.register(
     "Unspecified" : "Неуточнен",
     "Windows domain qualified name" : "Квалифицирано име на домейн на Windows",
     "X509 subject name" : "Име на субекта X509",
-    "Use SAML auth for the %s desktop clients (requires user re-authentication)" : "Използване на SAML удостоверяване за %s настолни клиенти (изисква повторно удостоверяване на потребителя)",
     "Optional display name of the identity provider (default: \"SSO & SAML log in\")" : "Име на доставчика на самоличност, за показванепо избор (по подразбиране: „SSO & SAML вписване“)",
     "Allow the use of multiple user back-ends (e.g. LDAP)" : "Разрешаване на използването на множество потребителски сървъри (напр. LDAP)",
     "SSO & SAML authentication" : "SSO и SAML удостоверяване",
@@ -67,7 +66,6 @@ OC.L10N.register(
     "Show Service Provider settings…" : "Показване на настройките на доставчика на услуги …",
     "Name ID format" : "Формат на идентификатор на името",
     "Identity Provider Data" : "Данни на доставчика на идентичност",
-    "Configure your IdP settings here." : "Конфигурирайте настройките на вашия IdP тук.",
     "Identifier of the IdP entity (must be a URI)" : "Идентификатор на обекта IdP (трябва да бъде URI)",
     "URL Target of the IdP where the SP will send the Authentication Request Message" : "URL адрес на цел на IdP, където SP ще изпрати съобщението за заявка за удостоверяване",
     "Show optional Identity Provider settings…" : "Показване на допълнителни настройки на доставчика на самоличност ...",
@@ -94,7 +92,6 @@ OC.L10N.register(
     "Your account is denied, access to this service is thus not possible." : "Вашият профил е отказан, следователно не е възможен достъп до тази услуга.",
     "Account not provisioned." : "Неосигурен профил.",
     "Your account is not provisioned, access to this service is thus not possible." : "Вашият профил не е осигурен, поради което не е възможен достъп до тази услуга.",
-    "Login options:" : "Опции за влизане:",
-    "Choose a authentication provider" : "Избор на доставчик на удостоверяване "
+    "Login options:" : "Опции за влизане:"
 },
 "nplurals=2; plural=(n != 1);");

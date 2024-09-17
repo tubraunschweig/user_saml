@@ -29,9 +29,10 @@
     "Attribute to map the displayname to." : "Атрибут на који се displayname мапира.",
     "Attribute to map the email address to." : "Атрибут на који се мапира адреса е-поште.",
     "Attribute to map the quota to." : "Атрибут на који се мапира квота.",
-    "Attribute to map the users groups to." : "Атрибут на који да се мапира корисничка група.",
     "Attribute to map the users home to." : "Атрибут на који да се мапира кориснички директоријум.",
+    "Attribute to map the users groups to." : "Атрибут на који да се мапира корисничка група.",
     "Attribute to map the users MFA login status" : "Атрибут који мапира корисников MFA статус пријављивања",
+    "Group Mapping Prefix, default: %s" : "Префикс мапирања групе, подразумевано: %s",
     "Reject members of these groups. This setting has precedence over required memberships." : "Одбиј чланове наведених група. Ово подешавање има предност у односу на захтевана чланства.",
     "Group A, Group B, …" : "Група А, Група Б, …",
     "Require membership in these groups, if any." : "Захтевај чланство у овим групама, ако постоји било која.",
@@ -44,7 +45,6 @@
     "Unspecified" : "Неодређено",
     "Windows domain qualified name" : "Квалификовано име Windows домена",
     "X509 subject name" : "X509 име субјекта",
-    "Use SAML auth for the %s desktop clients (requires user re-authentication)" : "Користи SAML проверу идентитета за %s десктоп клијенте (захтева поновну проверу идентитета)",
     "Optional display name of the identity provider (default: \"SSO & SAML log in\")" : "Опциони натпис за опслужиоца идентитета (подразумевано: „SSO & SAML log in“)",
     "Allow the use of multiple user back-ends (e.g. LDAP)" : "Дозволи коришћење више позадинских механизама (нпр. LDAP)",
     "SSO & SAML authentication" : "SSO & SAML провера идентитета",
@@ -65,7 +65,6 @@
     "Show Service Provider settings…" : "Прикажи поставке провајдера услуга…",
     "Name ID format" : "Name ID формат",
     "Identity Provider Data" : "Подаци провајдера идентитета",
-    "Configure your IdP settings here." : "Подесите добављача идентитета овде.",
     "Identifier of the IdP entity (must be a URI)" : "Идентификација ентитета добављача идентитета (мора бити URI)",
     "URL Target of the IdP where the SP will send the Authentication Request Message" : "URL одредиште добављача идентитета где ће добављач услуга слати Authentication Request Message",
     "Show optional Identity Provider settings…" : "Прикажи опционе поставке провајдера идентитета…",
@@ -93,6 +92,7 @@
     "Account not provisioned." : "Налог није добављен.",
     "Your account is not provisioned, access to this service is thus not possible." : "Ваш налог није добављен. Због тога није могућ приступ овом сервису.",
     "Login options:" : "Опције пријаве:",
-    "Choose a authentication provider" : "Одаберите провајдера провере идентитета"
+    "Choose an authentication provider" : "Изаберите пружаоца услуге провере идентитета",
+    "Group Mapping Prefix, default: SAML_" : "Префикс мапирања групе, подразумевано: SAML_ "
 },"pluralForm" :"nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);"
 }

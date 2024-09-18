@@ -99,7 +99,7 @@ class SAMLController extends Controller {
 	 * @throws NoUserFoundException
 	 * @throws UserFilterViolationException
 	 */
-	private function autoprovisionIfPossible(): void {
+	private function autoprovisionIfPossible($idp): void {
 		$auth = $this->userData->getAttributes();
 
 		if (!$this->userData->hasUidMappingAttribute()) {

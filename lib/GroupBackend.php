@@ -20,7 +20,7 @@ use Psr\Log\LoggerInterface;
 
 class GroupBackend extends ABackend implements IAddToGroupBackend, ICountUsersBackend, ICreateGroupBackend, IDeleteGroupBackend, IGetDisplayNameBackend, IRemoveFromGroupBackend, INamedBackend {
 
-	/** @var array  */
+	/** @var array */
 	private $groupCache = [];
 
 	public const TABLE_GROUPS = 'user_saml_groups';
@@ -28,7 +28,7 @@ class GroupBackend extends ABackend implements IAddToGroupBackend, ICountUsersBa
 
 	public function __construct(
 		protected IDBConnection $dbc,
-		protected LoggerInterface $logger
+		protected LoggerInterface $logger,
 	) {
 	}
 

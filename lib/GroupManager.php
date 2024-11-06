@@ -51,7 +51,7 @@ class GroupManager {
 		IConfig $config,
 		IEventDispatcher $dispatcher,
 		IJobList $jobList,
-		SAMLSettings $settings
+		SAMLSettings $settings,
 	) {
 		$this->db = $db;
 		$this->groupManager = $groupManager;
@@ -70,6 +70,10 @@ class GroupManager {
 	private function getGroupsToRemove(array $samlGroupNames, array $assignedGroups): array {
 		$groupsToRemove = [];
 		foreach ($assignedGroups as $group) {
+			\OCP\Log\logger('user_saml')->debug('Checking group {group} for removal', ['group' => $group->getGID()]);
+			if (in_array($group->getGID(), $samlGroupNames, true)) {
+				continue;
+			}
 			// if group is not supplied by SAML and group has SAML backend
 			if (!in_array($group->getGID(), $samlGroupNames) && $this->hasSamlBackend($group)) {
 				$groupsToRemove[] = $group->getGID();
@@ -88,6 +92,7 @@ class GroupManager {
 	private function getGroupsToAdd(array $samlGroupNames, array $assignedGroupIds): array {
 		$groupsToAdd = [];
 		foreach ($samlGroupNames as $groupName) {
+			\OCP\Log\logger('user_saml')->debug('Checking group {group} for addition', ['group' => $groupName]);
 			$group = $this->groupManager->get($groupName);
 			// if user is not assigned to the group or the provided group has a non SAML backend
 			if (!in_array($groupName, $assignedGroupIds) || !$this->hasSamlBackend($group)) {
@@ -286,11 +291,37 @@ class GroupManager {
 	 * allowed only for groups owned by the SAML backend.
 	 */
 	protected function mayModifyGroup(?IGroup $group): bool {
-		return
+		$isInTransition =
 			$group !== null
 			&& $group->getGID() !== 'admin'
 			&& in_array('Database', $group->getBackendNames())
-			&& $this->isGroupInTransitionList($group->getGID())
-			&& !$this->hasGroupForeignMembers($group);
+			&& $this->isGroupInTransitionList($group->getGID());
+
+		if ($isInTransition) {
+			\OCP\Log\logger('user_saml')->debug('Checking group {group} for foreign members', ['group' => $group->getGID()]);
+			$hasOnlySamlUsers = !$this->hasGroupForeignMembers($group);
+			\OCP\Log\logger('user_saml')->debug('Completed checking group {group} for foreign members', ['group' => $group->getGID()]);
+			if (!$hasOnlySamlUsers) {
+				$this->updateCandidatePool([$group->getGID()]);
+			}
+		}
+		return $isInTransition && $hasOnlySamlUsers;
+	}
+
+	public function updateCandidatePool(array $migratedGroups): void {
+		$candidateInfo = $this->config->getAppValue('user_saml', self::LOCAL_GROUPS_CHECK_FOR_MIGRATION, '');
+		if ($candidateInfo === '' || $candidateInfo === self::STATE_MIGRATION_PHASE_EXPIRED) {
+			return;
+		}
+		$candidateInfo = \json_decode($candidateInfo, true);
+		if (!isset($candidateInfo['dropAfter']) || !isset($candidateInfo['groups'])) {
+			return;
+		}
+		$candidateInfo['groups'] = array_diff($candidateInfo['groups'], $migratedGroups);
+		$this->config->setAppValue(
+			'user_saml',
+			self::LOCAL_GROUPS_CHECK_FOR_MIGRATION,
+			json_encode($candidateInfo)
+		);
 	}
 }

@@ -71,6 +71,7 @@
     "URL Location of the IdP where the SP will send the SLO Request" : "Umístění URL IdP, kam SP odešle SLO požadavek",
     "URL Location of the IDP's SLO Response" : "Umístění URL IDP, kam SLO odešle odpověď",
     "Public X.509 certificate of the IdP" : "Veřejný X.509 certifikát poskytovatele přihlašovacích údajů",
+    "Request parameters to pass-through to IdP (comma separated list)" : "Parametry požadavku které předat do IdP (čárkami oddělovaný seznam)",
     "Attribute mapping" : "Mapování atributů",
     "If you want to optionally map attributes to the user you can configure these here." : "Pokud chcete volitelně provést mapování atributů na uživatele, můžete to provést zde.",
     "Show attribute mapping settings…" : "Zobrazit nastavení pro mapování atributů…",
@@ -92,6 +93,7 @@
     "Account not provisioned." : "Účet není zprovozněn.",
     "Your account is not provisioned, access to this service is thus not possible." : "Váš účet ještě nebyl zprovozněn, přístup ke službě tedy ještě není možný.",
     "Login options:" : "Možnosti přihlašování:",
+    "Choose an authentication provider" : "Zvolte poskytovatele ověřování se",
     "Group Mapping Prefix, default: SAML_" : "Předpona mapování skupin – výchozí: SAML_"
 },"pluralForm" :"nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n <= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;"
 }

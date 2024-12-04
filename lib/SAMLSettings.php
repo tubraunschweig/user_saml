@@ -13,7 +13,6 @@ use OCP\IConfig;
 use OCP\ISession;
 use OCP\IURLGenerator;
 use OneLogin\Saml2\Constants;
-use OCP\ICacheFactory;
 
 class SAMLSettings {
 	private const LOADED_NONE = 0;
@@ -33,6 +32,7 @@ class SAMLSettings {
 		'idp-singleLogoutService.responseUrl',
 		'idp-singleLogoutService.url',
 		'idp-singleSignOnService.url',
+		'idp-passthroughParameters',
 		'idp-x509cert',
 		'security-authnRequestsSigned',
 		'security-general',
@@ -67,33 +67,18 @@ class SAMLSettings {
 
 	public const DEFAULT_GROUP_PREFIX = 'SAML_';
 
-	/** @var IURLGenerator */
-	private $urlGenerator;
-	/** @var IConfig */
-	private $config;
-	/** @var ISession */
-	private $session;
 	/** @var array<int, array<string, string>> */
 	private $configurations = [];
 	/** @var int */
 	private $configurationsLoadedState = self::LOADED_NONE;
-	/** @var ConfigurationsMapper */
-	private $mapper;
 
 	public function __construct(
-		IURLGenerator $urlGenerator,
-		IConfig       $config,
-		ISession      $session,
-		ConfigurationsMapper $mapper,
-		LocalUsers $LocalUsers,
-		ICacheFactory $cacheFactory,
+		private IURLGenerator $urlGenerator,
+		private IConfig $config,
+		private ISession $session,
+		private ConfigurationsMapper $mapper,
+		private LocalUsers $LocalUsers,
 	) {
-		$this->urlGenerator = $urlGenerator;
-		$this->config = $config;
-		$this->session = $session;
-		$this->mapper = $mapper;
-		$this->LocalUsers = $LocalUsers;
-		$this->cache = $cacheFactory->createDistributed('user_saml');
 	}
 
 	/**
@@ -138,7 +123,7 @@ class SAMLSettings {
 
 		$settings = [
 			'strict' => true,
-			'debug' => $this->config->getSystemValue('debug', false),
+			'debug' => $this->config->getSystemValueBool('debug', false),
 			'baseurl' => $this->urlGenerator->linkToRouteAbsolute('user_saml.SAML.base'),
 			'security' => [
 				'nameIdEncrypted' => ($this->configurations[$idp]['security-nameIdEncrypted'] ?? '0') === '1',
@@ -172,6 +157,7 @@ class SAMLSettings {
 					'url' => $this->configurations[$idp]['idp-singleSignOnService.url'] ?? '',
 				],
 				'x509cert' => $this->configurations[$idp]['idp-x509cert'] ?? '',
+				'passthroughParameters' => $this->configurations[$idp]['idp-passthroughParameters'] ?? '',
 			],
 		];
 

@@ -13,6 +13,7 @@ use OCP\IConfig;
 use OCP\ISession;
 use OCP\IURLGenerator;
 use OneLogin\Saml2\Constants;
+use OCP\ICacheFactory;
 
 class SAMLSettings {
 	private const LOADED_NONE = 0;
@@ -67,6 +68,9 @@ class SAMLSettings {
 
 	public const DEFAULT_GROUP_PREFIX = 'SAML_';
 
+	/** @var ICache */
+	public $cache;
+
 	/** @var array<int, array<string, string>> */
 	private $configurations = [];
 	/** @var int */
@@ -77,8 +81,10 @@ class SAMLSettings {
 		private IConfig $config,
 		private ISession $session,
 		private ConfigurationsMapper $mapper,
-		private LocalUsers $LocalUsers,
+		private ICacheFactory $cacheFactory,
+		public LocalUsers $LocalUsers,
 	) {
+		$this->cache = $cacheFactory->createDistributed('user_saml');
 	}
 
 	/**

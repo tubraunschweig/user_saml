@@ -1,10 +1,10 @@
 OC.L10N.register(
     "user_saml",
     {
-    "This user account is disabled, please contact your administrator." : "Tento používateľský účet bol zakázaný, obráťte sa na správcu.",
     "Saved" : "Uložené",
     "Could not save" : "Nepodarilo sa uložiť",
     "Provider" : "Poskytovateľ",
+    "This user account is disabled, please contact your administrator." : "Tento používateľský účet bol zakázaný, obráťte sa na správcu.",
     "Unknown error, please check the log file for more details." : "Neznáma chyba. Pre viac informácií skontrolujte logy.",
     "Direct log in" : "Priame prihlásenie",
     "SSO & SAML log in" : "SSO a SAML prihlásenie",
@@ -73,6 +73,7 @@ OC.L10N.register(
     "URL Location of the IdP where the SP will send the SLO Request" : "Umiestnenie URL IdP, kam SP zašle SLO požiadavku",
     "URL Location of the IDP's SLO Response" : "Umiestnenie URL IDP, kam SLO pošle odpoveď",
     "Public X.509 certificate of the IdP" : "Verejný certifikát X.509 poskytovateľa prihlasovacích údajov",
+    "Request parameters to pass-through to IdP (comma separated list)" : "Parametre žiadosti pre predanie do IdP (zoznam oddelený čiarkou)",
     "Attribute mapping" : "Mapovanie atribútov",
     "If you want to optionally map attributes to the user you can configure these here." : "Ak chcete voliteľne priradiť atribúty k používateľom, môžete ich nastaviť tu.",
     "Show attribute mapping settings…" : "Zobraziť nastavenia priradzovania atribútov ...",

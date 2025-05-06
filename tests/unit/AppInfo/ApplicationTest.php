@@ -1,4 +1,5 @@
 <?php
+
 /**
  * SPDX-FileCopyrightText: 2016 Nextcloud GmbH and Nextcloud contributors
  * SPDX-License-Identifier: AGPL-3.0-or-later
@@ -27,7 +28,7 @@ class ApplicationTest extends \Test\TestCase {
 
 	public function queryData() {
 		return [
-			['OnlyLoggedInMiddleware', OnlyLoggedInMiddleware::class],
+			[OnlyLoggedInMiddleware::class],
 		];
 	}
 
@@ -36,10 +37,7 @@ class ApplicationTest extends \Test\TestCase {
 	 * @param string $service
 	 * @param string $expected
 	 */
-	public function testContainerQuery($service, $expected = null) {
-		if ($expected === null) {
-			$expected = $service;
-		}
-		$this->assertTrue($this->container->query($service) instanceof $expected);
+	public function testContainerQuery($serviceClass) {
+		$this->assertTrue($this->container->query($serviceClass) instanceof $serviceClass);
 	}
 }

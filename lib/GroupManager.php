@@ -1,4 +1,5 @@
 <?php
+
 /**
  * SPDX-FileCopyrightText: 2019 Nextcloud GmbH and Nextcloud contributors
  * SPDX-License-Identifier: AGPL-3.0-or-later
@@ -126,9 +127,16 @@ class GroupManager {
 			return;
 		}
 
+		// keep empty groups if general-keep_groups is set to 1
+		$keepEmptyGroups = $this->config->getAppValue(
+			'user_saml',
+			'general-keep_groups',
+			'0',
+		);
+
 		if ($this->hasSamlBackend($group)) {
 			$this->ownGroupBackend->removeFromGroup($user->getUID(), $group->getGID());
-			if ($this->ownGroupBackend->countUsersInGroup($gid) === 0) {
+			if ($keepEmptyGroups !== '1' && $this->ownGroupBackend->countUsersInGroup($gid) === 0) {
 				$this->dispatcher->dispatchTyped(new BeforeGroupDeletedEvent($group));
 				$this->ownGroupBackend->deleteGroup($group->getGID());
 				$this->dispatcher->dispatchTyped(new GroupDeletedEvent($group));

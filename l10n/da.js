@@ -1,9 +1,9 @@
 OC.L10N.register(
     "user_saml",
     {
-    "This user account is disabled, please contact your administrator." : "Denne bruger konto er deaktiveret. Kontakt venligst din administrator.",
     "Saved" : "Gemt",
     "Provider" : "Udbyder",
+    "This user account is disabled, please contact your administrator." : "Denne bruger konto er deaktiveret. Kontakt venligst din administrator.",
     "Unknown error, please check the log file for more details." : "Ukendt fejl, tjek venligst logfilen for flere detaljer.",
     "Direct log in" : "Direkte login",
     "SSO & SAML log in" : "SSO & SAML log in",
@@ -21,7 +21,7 @@ OC.L10N.register(
     " Indicates a requirement for the NameID element on the SAMLResponse received by this SP to be present." : "Angiver et krav til NameID-elementet på SAMLResponse modtaget af denne SP skal være til stede.",
     "Indicates a requirement for the NameID received by this SP to be encrypted." : "Angiver et krav for, at NameID modtaget af denne SP skal krypteres.",
     "Indicates if the SP will validate all received XML." : "Angiver om SP'en vil validere alle modtagne XML'er.",
-    "ADFS URL-Encodes SAML data as lowercase, and the toolkit by default uses uppercase. Enable for ADFS compatibility on signature verification." : "ADFS URL-koder SAML-data som små bogstaver, og værktøjet bruger som standard store bogstaver. Aktivér for ADFS-kompatibilitet ved underskriftskontrol.",
+    "ADFS URL-Encodes SAML data as lowercase, and the toolkit by default uses uppercase. Enable for ADFS compatibility on signature verification." : "ADFS URL-koder SAML-data som små bogstaver, og værktøjet bruger som standard store bogstaver. Aktiver for ADFS-kompatibilitet ved underskriftskontrol.",
     "Attribute to map the UID to." : "Egenskab til at kortlægge UID til.",
     "Attribute to map the displayname to." : "Egenskab til at kortlægge visningsnavn til.",
     "Attribute to map the email address to." : "Egenskab til at kortlægge e-mail-adressen til.",
@@ -43,6 +43,7 @@ OC.L10N.register(
     "URL Target of the IdP where the SP will send the Authentication Request Message" : "URL for IdP'en, hvor SP'en sender meddelelsen om godkendelsesanmodning",
     "URL Location of the IdP where the SP will send the SLO Request" : "URL-placering af IdP'en, hvor SP'en sender SLO-anmodningen",
     "Public X.509 certificate of the IdP" : "Offentligt X.509-certifikat for IdP",
+    "Attribute mapping" : "Attribut kortlægning",
     "Security settings" : "Sikkerhedsindstillinger",
     "For increased security we recommend enabling the following settings if supported by your environment." : "For øget sikkerhed anbefaler vi at aktivere følgende indstillinger, hvis det understøttes af dit miljø.",
     "Show security settings…" : "Vis sikkerhedsindstillinger...",

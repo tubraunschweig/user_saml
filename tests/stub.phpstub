@@ -26,30 +26,6 @@ namespace OC\Core\Command {
 	}
 }
 
-namespace Symfony\Component\Console\Output {
-	class OutputInterface {
-		public function isVerbose(): bool;
-		public function isQuiet(): bool;
-		public function writeln($messages, int $options = 0): void;
-	}
-}
-
-namespace Symfony\Component\Console\Input {
-	class InputInterface {
-		public function getArgument(string $name): mixed;
-		public function getOptions(): array;
-		public function getOption(string $name): mixed;
-	}
-
-	class InputArgument {
-		public const REQUIRED = 1;
-	}
-
-	class InputOption {
-		public const VALUE_REQUIRED = 2;
-	}
-}
-
 namespace OC\Group {
 	abstract class Database extends \OCP\Group\Backend\ABackend implements
 		\OCP\Group\Backend\IAddToGroupBackend,
@@ -75,4 +51,39 @@ namespace OC\DB\Exceptions {
 
 namespace OCP\Log {
 	public function logger(?string $appId = null): \Psr\Log\LoggerInterface;
+}
+
+namespace OC\Security\CSRF {
+	class CsrfToken {
+		public function getEncryptedValue(): string {
+			return 'token';
+		}
+	}
+	class CsrfTokenManager {
+			abstract public function getToken(): CsrfToken;
+	}
+}
+
+namespace OC\User {
+	class LoginException extends \Exception {
+	}
+}
+
+namespace OCA\DAV\Connector\Sabre {
+	class Auth {
+		public const DAV_AUTHENTICATED = 'AUTHENTICATED_TO_DAV_BACKEND';
+	}
+}
+
+namespace OCA\DAV\Events {
+	use OCP\EventDispatcher\Event;
+	use Sabre\DAV\Server;
+	class SabrePluginAddEvent extends Event {
+		public function getServer(): Server;
+	}
+}
+
+class OC_User {
+	public static function useBackend($userBackend): void;
+	public static function handleApacheAuth(): void;
 }

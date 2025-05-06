@@ -1,4 +1,5 @@
 <?php
+
 /**
  * SPDX-FileCopyrightText: 2016 Nextcloud GmbH and Nextcloud contributors
  * SPDX-License-Identifier: AGPL-3.0-or-later
@@ -52,8 +53,21 @@ class AdminTest extends \Test\TestCase {
 			});
 
 		$serviceProviderFields = [
-			'x509cert' => 'X.509 certificate of the Service Provider',
-			'privateKey' => 'Private key of the Service Provider',
+			'x509cert' => [
+				'text' => 'X.509 certificate of the Service Provider',
+				'type' => 'text',
+				'required' => false,
+			],
+			'privateKey' => [
+				'text' => 'Private key of the Service Provider',
+				'type' => 'text',
+				'required' => false,
+			],
+			'entityId' => [
+				'text' => 'Service Provider EntityId (optional)',
+				'type' => 'line',
+				'required' => false,
+			]
 		];
 		$securityOfferFields = [
 			'nameIdEncrypted' => 'Indicates that the nameID of the <samlp:logoutRequest> sent by this SP will be encrypted.',

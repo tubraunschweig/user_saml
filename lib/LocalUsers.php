@@ -4,21 +4,21 @@ namespace OCA\User_SAML;
 
 use OCP\ICacheFactory;
 use OCP\ICache;
-use OCP\ILogger;
 use OCP\IConfig;
+use Psr\Log\LoggerInterface;
 
 class LocalUsers
 {
 	/** @var ICache */
 	private $cache;
-	/** @var ILogger */
+	/** @var LoggerInterface */
 	private $logger;
 	/** @var IConfig */
 	private $config;
 
 	public function __construct(
 		ICacheFactory $cacheFactory,
-		ILogger $logger,
+		LoggerInterface $logger,
 		IConfig $config,
 	) {
 		$this->cache = $cacheFactory->createDistributed('user_saml');

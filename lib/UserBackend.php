@@ -35,16 +35,16 @@ class UserBackend extends ABackend implements IApacheBackend, IUserBackend, IGet
 	private static $backends = [];
 
 	public function __construct(
-		private IConfig $config,
-		private IURLGenerator $urlGenerator,
-		private ISession $session,
-		private IDBConnection $db,
-		private IUserManager $userManager,
-		private GroupManager $groupManager,
-		private SAMLSettings $settings,
-		private LoggerInterface $logger,
-		private UserData $userData,
-		private IEventDispatcher $eventDispatcher,
+		private readonly IConfig $config,
+		private readonly IURLGenerator $urlGenerator,
+		private readonly ISession $session,
+		private readonly IDBConnection $db,
+		private readonly IUserManager $userManager,
+		private readonly GroupManager $groupManager,
+		private readonly SAMLSettings $settings,
+		private readonly LoggerInterface $logger,
+		private readonly UserData $userData,
+		private readonly IEventDispatcher $eventDispatcher,
 	) {
 	}
 
@@ -91,7 +91,7 @@ class UserBackend extends ABackend implements IApacheBackend, IUserBackend, IGet
 				//if attribute's value is an absolute path take this, otherwise append it to data dir
 				//check for / at the beginning or pattern c:\ resp. c:/
 				if ($home[0] !== '/'
-				   && !(strlen($home) > 3 && ctype_alpha($home[0])
+				   && !(strlen((string)$home) > 3 && ctype_alpha((string)$home[0])
 					   && $home[1] === ':' && ($home[2] === '\\' || $home[2] === '/'))
 				) {
 					$home = $this->config->getSystemValueString('datadirectory',
@@ -159,10 +159,7 @@ class UserBackend extends ABackend implements IApacheBackend, IUserBackend, IGet
 		$result = $qb->executeQuery();
 		$users = $result->fetchAll();
 		$result->closeCursor();
-		if (isset($users[0]['home'])) {
-			return $users[0]['home'];
-		}
-		return false;
+		return $users[0]['home'] ?? false;
 	}
 
 	/**
@@ -177,9 +174,7 @@ class UserBackend extends ABackend implements IApacheBackend, IUserBackend, IGet
 	public function getUsers($search = '', $limit = null, $offset = null) {
 		// shamelessly duplicated from \OC\User\Database
 		$users = $this->getDisplayNames($search, $limit, $offset);
-		$userIds = array_map(function ($uid) {
-			return (string)$uid;
-		}, array_keys($users));
+		$userIds = array_map(fn ($uid) => (string)$uid, array_keys($users));
 		sort($userIds, SORT_STRING | SORT_FLAG_CASE);
 		return $userIds;
 	}
@@ -295,10 +290,7 @@ class UserBackend extends ABackend implements IApacheBackend, IUserBackend, IGet
 		$result = $qb->executeQuery();
 		$users = $result->fetchAll();
 		$result->closeCursor();
-		if (isset($users[0]['displayname'])) {
-			return $users[0]['displayname'];
-		}
-		return $uid;
+		return $users[0]['displayname'] ?? $uid;
 	}
 
 	/**
@@ -428,7 +420,7 @@ class UserBackend extends ABackend implements IApacheBackend, IUserBackend, IGet
 		}
 
 		try {
-			$result['formatted']['groups'] = $this->getAttributeArrayValue('saml-attribute-mapping-group_mapping', $attributes);
+			$result['formatted']['groups'] = $this->userData->getGroups();
 		} catch (\InvalidArgumentException) {
 			$result['formatted']['groups'] = null;
 		}
@@ -547,24 +539,8 @@ class UserBackend extends ABackend implements IApacheBackend, IUserBackend, IGet
 		return $value;
 	}
 
-	private function getAttributeArrayValue($name, array $attributes) {
-		$keys = $this->getAttributeKeys($name);
-
-		$value = [];
-		foreach ($keys as $key) {
-			if (isset($attributes[$key])) {
-				if (is_array($attributes[$key])) {
-					$value = array_merge($value, array_values($attributes[$key]));
-				} else {
-					$value[] = $attributes[$key];
-				}
-			}
-		}
-
-		return $value;
-	}
-
-	public function updateAttributes(string $uid, array $attributes): void {
+	public function updateAttributes(string $uid): void {
+		$attributes = $this->userData->getAttributes();
 		$user = $this->userManager->get($uid);
 		try {
 			$newEmail = $this->getAttributeValue('saml-attribute-mapping-email_mapping', $attributes);
@@ -592,7 +568,7 @@ class UserBackend extends ABackend implements IApacheBackend, IUserBackend, IGet
 		}
 
 		try {
-			$newGroups = $this->getAttributeArrayValue('saml-attribute-mapping-group_mapping', $attributes);
+			$newGroups = $this->userData->getGroups();
 			$this->logger->debug('Group attribute content: {groups}', ['app' => 'user_saml', 'groups' => json_encode($newGroups)]);
 		} catch (\InvalidArgumentException $e) {
 			$this->logger->debug('Failed to fetch group attribute: {exception}', ['app' => 'user_saml', 'exception' => $e->getMessage()]);

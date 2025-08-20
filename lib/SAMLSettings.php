@@ -30,6 +30,8 @@ class SAMLSettings {
 		'general-uid_mapping',
 		'general-uid_regex_allow',
 		'general-uid_regex_filter',
+		'general-is_saml_request_using_post',
+		'general-saml_request_method',
 		'idp-entityId',
 		'idp-singleLogoutService.responseUrl',
 		'idp-singleLogoutService.url',
@@ -204,11 +206,9 @@ class SAMLSettings {
 	 * @throws InvalidArgumentException
 	 */
 	public function set(int $id, array $settings): void {
-		foreach (array_keys($settings) as $configKey) {
-			if (!in_array($configKey, self::IDP_CONFIG_KEYS)) {
-				throw new InvalidArgumentException('Invalid config key');
-			}
-		}
+		$settings = array_filter($settings, static function (string $configKey): bool {
+			return in_array($configKey, self::IDP_CONFIG_KEYS, true);
+		}, ARRAY_FILTER_USE_KEY);
 
 		$this->mapper->set($id, $settings);
 	}

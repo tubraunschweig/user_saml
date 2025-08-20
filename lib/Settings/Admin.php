@@ -18,10 +18,10 @@ use OneLogin\Saml2\Constants;
 class Admin implements ISettings {
 
 	public function __construct(
-		private IL10N $l10n,
-		private Defaults $defaults,
-		private IConfig $config,
-		private SAMLSettings $samlSettings,
+		private readonly IL10N $l10n,
+		private readonly Defaults $defaults,
+		private readonly IConfig $config,
+		private readonly SAMLSettings $samlSettings,
 	) {
 	}
 
@@ -49,7 +49,7 @@ class Admin implements ISettings {
 				'required' => false,
 			],
 			'entityId' => [
-				'text' => $this->l10n->t('Service Provider EntityId (optional)'),
+				'text' => $this->l10n->t('Service Provider Entity ID (optional)'),
 				'type' => 'line',
 				'required' => false,
 			]
@@ -208,6 +208,11 @@ class Admin implements ISettings {
 			$generalSettings['idp0_display_name'] = [
 				'text' => $this->l10n->t('Optional display name of the identity provider (default: "SSO & SAML log in")'),
 				'type' => 'line',
+				'required' => false,
+			];
+			$generalSettings['is_saml_request_using_post'] = [
+				'text' => $this->l10n->t('Use POST method for SAML request (default: GET)'),
+				'type' => 'checkbox',
 				'required' => false,
 			];
 			$generalSettings['allow_multiple_user_back_ends'] = [

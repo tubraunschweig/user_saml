@@ -53,14 +53,12 @@ class Application extends App implements IBootstrap {
 		$context->registerMiddleware(OnlyLoggedInMiddleware::class);
 		$context->registerEventListener(BeforeTemplateRenderedEvent::class, LoadAdditionalScriptsListener::class);
 		$context->registerEventListener(SabrePluginAddEvent::class, SabrePluginEventListener::class);
-		$context->registerService(DavPlugin::class, function (ContainerInterface $c) {
-			return new DavPlugin(
-				$c->get(ISession::class),
-				$c->get(IConfig::class),
-				$_SERVER,
-				$c->get(SAMLSettings::class)
-			);
-		});
+		$context->registerService(DavPlugin::class, fn (ContainerInterface $c) => new DavPlugin(
+			$c->get(ISession::class),
+			$c->get(IConfig::class),
+			$_SERVER,
+			$c->get(SAMLSettings::class)
+		));
 	}
 
 	public function boot(IBootContext $context): void {
@@ -81,11 +79,9 @@ class Application extends App implements IBootstrap {
 				IEventDispatcher $dispatcher,
 				CsrfTokenManager $csrfTokenManager,
 				bool $isCLI,
-			) {
+			): void {
 				$groupBackend = Server::get(GroupBackend::class);
 				Server::get(IGroupManager::class)->addBackend($groupBackend);
-
-				$samlSettings = Server::get(SAMLSettings::class);
 
 				$userBackend = Server::get(UserBackend::class);
 
@@ -152,12 +148,12 @@ class Application extends App implements IBootstrap {
 
 				// All requests that are not authenticated and match against the "/login" route are
 				// redirected to the SAML login endpoint
-				if (!$isCLI &&
-					!$userSession->isLoggedIn() &&
-					($request->getPathInfo() === '/login')) {
+				if (!$isCLI
+					&& !$userSession->isLoggedIn()
+					&& ($request->getPathInfo() === '/login')) {
 					try {
 						$params = $request->getParams();
-					} catch (\LogicException $e) {
+					} catch (\LogicException) {
 						// ignore exception when PUT is called since getParams cannot parse parameters in that case
 					}
 					if (isset($params['direct']) && ($params['direct'] === 1 || $params['direct'] === '1')) {
@@ -168,12 +164,12 @@ class Application extends App implements IBootstrap {
 
 				$multipleUserBackEnds = $samlSettings->allowMultipleUserBackEnds();
 				$configuredIdps = $samlSettings->getListOfIdps();
-				$showLoginOptions = $multipleUserBackEnds || count($configuredIdps) > 1;
+				$showLoginOptions = $type !== 'environment-variable' && ($multipleUserBackEnds || count($configuredIdps) > 1);
 
 				if ($redirectSituation === true && $showLoginOptions) {
 					try {
 						$params = $request->getParams();
-					} catch (\LogicException $e) {
+					} catch (\LogicException) {
 						// ignore exception when PUT is called since getParams cannot parse parameters in that case
 					}
 					$redirectUrl = '';
@@ -194,7 +190,7 @@ class Application extends App implements IBootstrap {
 				if ($redirectSituation === true) {
 					try {
 						$params = $request->getParams();
-					} catch (\LogicException $e) {
+					} catch (\LogicException) {
 						// ignore exception when PUT is called since getParams cannot parse parameters in that case
 					}
 					$originalUrl = '';

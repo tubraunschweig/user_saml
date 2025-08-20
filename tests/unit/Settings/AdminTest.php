@@ -48,9 +48,7 @@ class AdminTest extends \Test\TestCase {
 		$this->l10n
 			->expects($this->any())
 			->method('t')
-			->willReturnCallback(function ($text, $parameters = []) {
-				return vsprintf($text, $parameters);
-			});
+			->willReturnCallback(fn ($text, $parameters = []) => vsprintf($text, $parameters));
 
 		$serviceProviderFields = [
 			'x509cert' => [
@@ -64,7 +62,7 @@ class AdminTest extends \Test\TestCase {
 				'required' => false,
 			],
 			'entityId' => [
-				'text' => 'Service Provider EntityId (optional)',
+				'text' => 'Service Provider Entity ID (optional)',
 				'type' => 'line',
 				'required' => false,
 			]
@@ -96,6 +94,11 @@ class AdminTest extends \Test\TestCase {
 			'idp0_display_name' => [
 				'text' => $this->l10n->t('Optional display name of the identity provider (default: "SSO & SAML log in")'),
 				'type' => 'line',
+				'required' => false,
+			],
+			'is_saml_request_using_post' => [
+				'text' => $this->l10n->t('Use POST method for SAML request (default: GET)'),
+				'type' => 'checkbox',
 				'required' => false,
 			],
 			'uid_mapping' => [
@@ -241,8 +244,7 @@ class AdminTest extends \Test\TestCase {
 			->willReturn($this->returnArgument(2));
 
 		$params = $this->formDataProvider();
-		unset($params['general']['idp0_display_name']);
-		unset($params['general']['allow_multiple_user_back_ends']);
+		unset($params['general']['idp0_display_name'], $params['general']['is_saml_request_using_post'], $params['general']['allow_multiple_user_back_ends']);
 		$params['type'] = '';
 
 		$expected = new TemplateResponse('user_saml', 'admin', $params);

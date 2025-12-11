@@ -11,6 +11,7 @@ OC.L10N.register(
     "Require membership in these groups, if any." : "Eelda nende gruppide liikmelisust, kui seda vaja peaks olema.",
     "Email address" : "E-posti aadress",
     "Encrypted" : "Krüptitud",
+    "Unspecified" : "Määratlemata",
     "Use POST method for SAML request (default: GET)" : "Kasuta SAML-i päringute jaoks POST-meetodit (vaikimisi on kasutusel GET-meetod)",
     "SSO & SAML authentication" : "SSO & SAML autentimine",
     "Open documentation" : "Ava dokumentatsioon",
@@ -22,9 +23,17 @@ OC.L10N.register(
     "General" : "Üldine",
     "Service Provider Data" : "Teenusepakkuja andmed",
     "Security settings" : "Turvaseaded",
+    "Signatures and encryption offered" : "Allkirjastamine ja krüptimine on saadaval",
+    "Signatures and encryption required" : "Allkirjastamine ja krüptimine on nõutavad",
+    "User filtering" : "Kasutajate filtreerimine",
+    "Download metadata XML" : "Laadi alla metateabe XML",
     "Reset settings" : "Lähtesta seadistused",
+    "Metadata invalid" : "Vigane metateave",
+    "Metadata valid" : "Metateave on korrektne",
     "Error" : "Viga",
     "JavaScript is disabled in your browser. Please enable it to continue." : "JavaScript on sinu veebibrauseris keelatud. Jätkamiseks palun luba JavaScripti kasutamine.",
-    "Access denied." : "Ligipääs on keelatud."
+    "Access denied." : "Ligipääs on keelatud.",
+    "Login options:" : "Sisselogimise valikud:",
+    "Choose an authentication provider" : "Vali autentimise teenusepakkuja"
 },
 "nplurals=2; plural=(n != 1);");
